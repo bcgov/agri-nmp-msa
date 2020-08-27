@@ -1,3 +1,4 @@
 .env
 .DS_Store
 docker/db/data
+docker/nginx/certs
