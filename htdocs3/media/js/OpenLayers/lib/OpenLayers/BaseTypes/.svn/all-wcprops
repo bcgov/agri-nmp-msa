@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/BaseTypes
+END
+Class.js
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/BaseTypes/Class.js
+END
+Element.js
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/BaseTypes/Element.js
+END
+LonLat.js
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/BaseTypes/LonLat.js
+END
+Bounds.js
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/BaseTypes/Bounds.js
+END
+Size.js
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/BaseTypes/Size.js
+END
+Date.js
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/BaseTypes/Date.js
+END
+Pixel.js
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/BaseTypes/Pixel.js
+END

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/12274/branches/openlayers/2.11/lib/OpenLayers/Protocol
+END
+SOS.js
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Protocol/SOS.js
+END
+Script.js
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/12274/branches/openlayers/2.11/lib/OpenLayers/Protocol/Script.js
+END
+HTTP.js
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Protocol/HTTP.js
+END
+SQL.js
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Protocol/SQL.js
+END
+WFS.js
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Protocol/WFS.js
+END

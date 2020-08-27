@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <title>OSS Testing</title>
+    <script src="/whatcom_msa/media/js/bc_tableConstructor.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="/whatcom_msa/media/js/OpenLayers/theme/default/style.css" type="text/css" />
+    <script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
+    <script src="/whatcom_msa/media/js/OpenLayers/OpenLayers.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script src="/whatcom_msa/media/js/googlePopupBlocker.js" type="text/javascript"></script>
+    <script src="/whatcom_msa/media/js/oss_whatcom_openlayers.js" type="text/javascript"></script>
+    <style type="text/css">
+	#msa_legend{
+	    position:absolute; 
+	    right:10px; 
+	    bottom:10px; 
+	    z-index:10000; 
+	    width:101px; 
+	    height:110px; 
+	    background-color:#EFEFEF;
+	}
+	#msa_legend p {
+
+            font-size:7px;
+	}
+
+    </style>
+
+</head>
+
+  <body onload="init2()">
+
+        <div id="map" class="largemap">
+		<div id="msa_legend">
+			<b> Legend</b>
+			<img src="/cgi-bin/mapserv?map=/srv/www/mapfiles/oss_whatcom.map&LAYER=OSS-Whatcom&service=WMS&version=1.1.1&request=getlegendgraphic&format=image/png" />
+			<p> *Data provided by Weather Underground</p> 
+		</div>
+	</div>
+
+  </body>
+
+</html>
+

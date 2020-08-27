@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Strategy
+END
+Filter.js
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Strategy/Filter.js
+END
+Paging.js
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Strategy/Paging.js
+END
+BBOX.js
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Strategy/BBOX.js
+END
+Refresh.js
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Strategy/Refresh.js
+END
+Save.js
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Strategy/Save.js
+END
+Fixed.js
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Strategy/Fixed.js
+END
+Cluster.js
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Strategy/Cluster.js
+END

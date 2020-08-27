@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Symbolizer
+END
+Text.js
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Symbolizer/Text.js
+END
+Line.js
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Symbolizer/Line.js
+END
+Polygon.js
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Symbolizer/Polygon.js
+END
+Point.js
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Symbolizer/Point.js
+END
+Raster.js
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/12222/branches/openlayers/2.11/lib/OpenLayers/Symbolizer/Raster.js
+END
