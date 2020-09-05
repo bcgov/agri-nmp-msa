@@ -57,6 +57,8 @@ public class UpdateForecastsService {
       if (doUpdate && maxUpdates.tryAcquire()) {
         OWMForecast owmForecast = this.getOpenWeatherMap(weatherStation.getLatitude().toString(), weatherStation.getLongitude().toString());
         service.storeForecast(weatherStation.getId(), owmForecast);
+
+//        System.out.println("Statistics: " + owmForecast.computeStatistics());
       }
     });
   }

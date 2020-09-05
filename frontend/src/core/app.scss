@@ -1,6 +1,14 @@
 @import "~leaflet/dist/leaflet.css";
 
+html, body {
+  height: 100%;
+}
+
 #msa {
-  height: 70vh;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  //height: 70vh;
+  //height: 100%;
   width: 100%;
 }
