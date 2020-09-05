@@ -16,7 +16,7 @@ const Msa = () => {
   const [selectedFeature, setSelectedFeature] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/v1/groups/geojson').then((response) => {
+    axios.get('http://nmp-msa-dev-agri-nmp-dev.pathfinder.gov.bc.ca/v1/groups/geojson').then((response) => { //http://localhost:8080/v1/groups/geojson
       setGeoJSON(response.data);
       setLoaded(true);
     });
