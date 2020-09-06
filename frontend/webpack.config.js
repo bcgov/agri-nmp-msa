@@ -106,7 +106,8 @@ const config = {
     }),
     new Webpack.HotModuleReplacementPlugin(),
     new Webpack.DefinePlugin({
-      ENV_TOKEN: 'ENV_TOKEN' in process.env ? JSON.stringify(process.env.ENV_TOKEN) : '\'unset\'',
+      _API_BASE: 'API_BASE' in process.env ? JSON.stringify(process.env.API_BASE) : '\'http://localhost:8080/\'',
+      _GA_ENABLED: 'GA_ENABLED' in process.env ? JSON.stringify(process.env.GA_ENABLED) : 'false',
     }),
     new HtmlWebpackPlugin({
       title: 'AGRI NMP MSA',

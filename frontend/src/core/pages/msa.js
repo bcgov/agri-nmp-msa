@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { GeoJSON, Map, Popup, TileLayer } from 'react-leaflet';
 import { useHistory } from 'react-router';
+import CONFIG from '../config';
 
 const Msa = () => {
 
@@ -16,7 +17,7 @@ const Msa = () => {
   const [selectedFeature, setSelectedFeature] = useState(null);
 
   useEffect(() => {
-    axios.get('http://nmp-msa-dev-agri-nmp-dev.pathfinder.gov.bc.ca/v1/groups/geojson').then((response) => { //http://localhost:8080/v1/groups/geojson
+    axios.get(`${CONFIG.API_BASE}/v1/groups/geojson`).then((response) => {
       setGeoJSON(response.data);
       setLoaded(true);
     });

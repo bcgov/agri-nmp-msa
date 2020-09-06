@@ -8,7 +8,6 @@ import NavComponent from './nav';
 
 
 const PageStructure = (props) => {
-  // const { i18n } = useTranslation();
 
   const history = useHistory();
   const { children, language, changeLanguage } = props;
@@ -24,11 +23,9 @@ const PageStructure = (props) => {
         AGRI NMP MSA Tool
       </a>,
       <NavComponent key="mainNav" />,
-      // <div key="main">
       <>
         {children}
       </>,
-      // </div>,
     ]
   );
 };
