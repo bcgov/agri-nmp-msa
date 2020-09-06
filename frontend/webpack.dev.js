@@ -1,6 +1,8 @@
 const Webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const SriPlugin = require('webpack-subresource-integrity');
 require('dotenv').config();
@@ -23,11 +25,11 @@ const config = {
   },
   optimization: {
     splitChunks: {
+      chunks: 'all',
       cacheGroups: {
-        commons: {
+        vendor: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendor',
-          chunks: 'all',
         },
       },
     },
@@ -96,10 +98,10 @@ const config = {
   },
   devtool: 'source-map',
   plugins: [
-    new SriPlugin({
-      hashFuncNames: ['sha256', 'sha384'],
-      enabled: process.env.NODE_ENV === 'production',
-    }),
+    // new SriPlugin({
+    //   hashFuncNames: ['sha256', 'sha384'],
+    //   enabled: process.env.NODE_ENV === 'production',
+    // }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',

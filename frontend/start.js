@@ -3,7 +3,7 @@ const WebpackDevServer = require('webpack-dev-server');
 const path = require('path');
 const http = require('http');
 
-const webpackConfig = require('./webpack.config');
+const webpackConfig = require('./webpack.dev');
 
 const devServerOptions = {
   contentBase: path.join(__dirname, 'public/build'),

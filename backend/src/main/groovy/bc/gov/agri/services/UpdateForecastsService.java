@@ -21,24 +21,15 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class UpdateForecastsService {
 
-  @Autowired
-  PrecipitationGroupsService service;
+  @Autowired PrecipitationGroupsService service;
 
-  @Value("${GOV_BC_AGRI_OWM_APIKEY}")
-  private String APIKEY;
+  @Value("${GOV_BC_AGRI_OWM_APIKEY}") private String APIKEY;
 
-  @Scheduled(cron = "20 * * * * ?", zone = "America/Vancouver")
-  public void updateForecasts() {
-    System.out.println("updating forecasts");
-  }
-
-  //  @Scheduled(cron = "30 * * * * ?", zone = "America/Vancouver")
-  @Scheduled(initialDelay = 1000, fixedDelay = 5000)
+  @Scheduled(cron = "* 0 * * * ?", zone = "America/Vancouver")
   public void fromOas() {
     Random r = new Random();
     System.out.println("updating forecasts");
     List<WeatherStation> stations = service.getWeatherStations();
-    Semaphore maxUpdates = new Semaphore(3);
 
     stations.forEach(weatherStation -> {
       LocalDateTime lastUpdate = service.lastForecastUpdate(weatherStation.getId());
@@ -54,11 +45,10 @@ public class UpdateForecastsService {
         }
       }
 
-      if (doUpdate && maxUpdates.tryAcquire()) {
-        OWMForecast owmForecast = this.getOpenWeatherMap(weatherStation.getLatitude().toString(), weatherStation.getLongitude().toString());
+      if (doUpdate) {
+        OWMForecast owmForecast = this.getOpenWeatherMap(weatherStation.getLatitude().toString(),
+            weatherStation.getLongitude().toString());
         service.storeForecast(weatherStation.getId(), owmForecast);
-
-//        System.out.println("Statistics: " + owmForecast.computeStatistics());
       }
     });
   }
@@ -71,14 +61,14 @@ public class UpdateForecastsService {
     this.template = restTemplateBuilder.additionalInterceptors((request, body, execution) -> {
       long now = System.currentTimeMillis();
       rl.acquire();
-      System.out.println("acquired lease after " + (System.currentTimeMillis() - now) + " ms");
       return execution.execute(request, body);
     }).build();
   }
 
   public OWMForecast getOpenWeatherMap(String lat, String lon) {
 
-    final String APIQUERY = "https://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${lon}&cnt=8&appid=${APIKEY}";
+    final String APIQUERY = "https://api.openweathermap.org/data/2"
+        + ".5/forecast/daily?lat=${lat}&lon=${lon}&cnt=8&appid=${APIKEY}";
 
     Map<String, String> map = new HashMap<>();
     map.put("APIKEY", this.APIKEY);

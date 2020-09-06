@@ -38,7 +38,6 @@ class OWMForecast {
     return ToStringBuilder.reflectionToString(this);
   }
 
-///**/  @JsonProperty("statistics")
   List<Statistics> getStatistics() {
     try {
       return list.stream().map(e -> {
@@ -69,7 +68,6 @@ class OWMForecast {
 
   static class Statistics {
 
-    //@JsonIgnore
     Forecast associatedForecast;
 
     Double next24 = 0;
