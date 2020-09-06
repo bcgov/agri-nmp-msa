@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,6 +92,8 @@ public class PrecipitationGroupsService {
     });
   }
 
+
+  @Cacheable("geojson")
   public FeatureCollection getGeoJSON() {
 
     FeatureCollection fc = new FeatureCollection();
