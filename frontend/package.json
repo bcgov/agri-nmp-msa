@@ -62,6 +62,7 @@
   "scripts": {
     "start": "node start",
     "dist": "webpack --production",
+    "build": "webpack --production",
     "test": "jest --coverage",
     "lint": "eslint src",
     "serve": "node serve"
