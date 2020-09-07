@@ -1,20 +1,15 @@
 const Webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CompressionPlugin = require('compression-webpack-plugin');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const SriPlugin = require('webpack-subresource-integrity');
 require('dotenv').config();
-
-const packageJson = require('./package.json');
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'public', 'build');
 const mainPath = path.resolve(__dirname, 'src', 'index.js');
 
 const config = {
-//  mode: 'development',
   entry: {
     bundle: [
       'webpack/hot/dev-server',
@@ -98,10 +93,6 @@ const config = {
   },
   devtool: 'source-map',
   plugins: [
-    // new SriPlugin({
-    //   hashFuncNames: ['sha256', 'sha384'],
-    //   enabled: process.env.NODE_ENV === 'production',
-    // }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',
@@ -115,7 +106,7 @@ const config = {
       title: 'AGRI NMP MSA',
       chunks: ['bundle', 'vendor'],
       filename: 'generated_index.html',
-      inject: false,
+      inject: true,
       mobile: true,
       appMountId: 'root',
       links: [

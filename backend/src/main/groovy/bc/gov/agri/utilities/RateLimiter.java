@@ -1,4 +1,4 @@
-package bc.gov.agri.services;
+package bc.gov.agri.utilities;
 
 import java.util.concurrent.Semaphore;
 

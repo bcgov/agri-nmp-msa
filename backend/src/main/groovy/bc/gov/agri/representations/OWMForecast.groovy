@@ -1,10 +1,7 @@
 package bc.gov.agri.representations
 
-import bc.gov.agri.services.DateDeserializer
-import com.fasterxml.jackson.annotation.JsonIdentityInfo
-import com.fasterxml.jackson.annotation.JsonIgnore
+import bc.gov.agri.utilities.DateDeserializer
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.annotation.JsonValue
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import org.apache.commons.lang3.builder.ToStringBuilder
 

@@ -7,14 +7,11 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const SriPlugin = require('webpack-subresource-integrity');
 require('dotenv').config();
 
-const packageJson = require('./package.json');
-
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'public', 'build');
 const mainPath = path.resolve(__dirname, 'src', 'index.js');
 
 const config = {
-//  mode: 'development',
   entry: {
     bundle: [
       '@babel/polyfill',
@@ -22,7 +19,6 @@ const config = {
     ],
   },
   optimization: {
-    // runtimeChunk: 'single',
     splitChunks: {
       maxInitialRequests: Infinity,
       minSize: 0,
@@ -34,8 +30,6 @@ const config = {
             const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
             return `npm.${packageName.replace('@', '')}`;
           },
-          // name: 'vendor',
-          // chunks: 'all',
         },
       },
     },

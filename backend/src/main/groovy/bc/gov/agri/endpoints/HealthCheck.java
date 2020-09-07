@@ -12,19 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
 @RestController
-@RequestMapping(value = "/v1/groups")
+@RequestMapping(value = "/v1/health")
 @CrossOrigin(origins = "*")
-public class PrecipitationGroups {
+public class HealthCheck {
 
-  final private PrecipitationGroupsService service;
-
-  public PrecipitationGroups(PrecipitationGroupsService service) {
-    this.service = service;
-  }
-
-  @RequestMapping(value = "/geojson", method = RequestMethod.GET)
-  public ResponseEntity<FeatureCollection> geojson(WebRequest request) {
-    final FeatureCollection geoJSON = service.getGeoJSON();
-    return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS)).body(geoJSON);
+  @RequestMapping(value = "/", method = RequestMethod.GET)
+  public String healthCheck() {
+    return "up";
   }
 }

@@ -93,14 +93,14 @@ public class PrecipitationGroupsService {
   }
 
 
-  @Cacheable("geojson")
+  @Cacheable(cacheNames = "geojson")
   public FeatureCollection getGeoJSON() {
 
     FeatureCollection fc = new FeatureCollection();
 
     String Q =
         "SELECT pg.precipgrp as id, ST_AsGEOJSON(pg.geom)::json AS geometry, sp.longitude, sp"
-            + ".latitude from precip_groups pg inner join station_points sp on sp.precipgrp = pg"
+            + ".latitude, sp.userlink as link from precip_groups pg inner join station_points sp on sp.precipgrp = pg"
             + ".precipgrp;";
 
     template.query(Q, row -> {
@@ -108,6 +108,7 @@ public class PrecipitationGroupsService {
       String geometry = row.getString(2);
       BigDecimal lon = row.getBigDecimal(3);
       BigDecimal lat = row.getBigDecimal(4);
+      String link = row.getString(5);
 
       WeatherStation ws = new WeatherStation();
       ws.setLatitude(lat);
@@ -118,6 +119,7 @@ public class PrecipitationGroupsService {
       f.getProperties().put("weatherStation", ws);
       f.getProperties().put("precipgrp", id);
       f.getProperties().put("forecasts", this.retrieveForecasts(id));
+      f.getProperties().put("link", link);
 
       fc.getFeatures().add(f);
     });

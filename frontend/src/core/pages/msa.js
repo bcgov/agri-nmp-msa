@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { GeoJSON, Map, Popup, TileLayer } from 'react-leaflet';
 import { useHistory } from 'react-router';
+import Sidebar from '../components/sidebar';
 import CONFIG from '../config';
 
 const Msa = () => {
@@ -24,7 +25,6 @@ const Msa = () => {
   }, []);
 
   const getStyle = (feature) => {
-
     const firstDay = feature.properties.forecasts.statistics[0].runoffRisk;
 
     let style = {
@@ -83,46 +83,51 @@ const Msa = () => {
 
   if (loaded) {
     return (
+      <>
+        <Map
+          id="msa"
+          center={[49, -123]}
+          zoom={9}
+        >
+          <GeoJSON data={geojson} onEachFeature={onEachFeature.bind(null, this)} style={getStyle}>
 
-      <Map
-        id="msa"
-        center={[49, -123]}
-        zoom={9}
-      >
-        <GeoJSON data={geojson} onEachFeature={onEachFeature.bind(null, this)} style={getStyle}>
+            {selectedFeature && <Popup>
+              <h2>Feature {selectedFeature.properties.precipgrp} Details</h2>
+              {selectedFeature.properties.link &&
+              <a className={`weatherLink`} target='_' href={selectedFeature.properties.link}>Weather Report</a>}
+              <table>
+                <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>24-hr precipitation (mm)</th>
+                  <th>72-hr precipitation (mm)</th>
+                  <th>Runoff risk rating</th>
+                </tr>
+                </thead>
+                <tbody>
+                {[0, 1, 2, 3, 4].map((v) => (
+                    <tr>
+                      <td>{formatDate(new Date(selectedFeature.properties.forecasts.statistics[v].associatedForecast.dt))}</td>
+                      <td>{formatNumeric(selectedFeature.properties.forecasts.statistics[v].next24)}</td>
+                      <td>{formatNumeric(selectedFeature.properties.forecasts.statistics[v].next72)}</td>
+                      <td
+                        className={`risk-${selectedFeature.properties.forecasts.statistics[v].runoffRisk}`}>{selectedFeature.properties.forecasts.statistics[v].runoffRisk}</td>
+                    </tr>
+                  )
+                )}
+                </tbody>
+              </table>
+            </Popup>
+            }
+          </GeoJSON>
 
-          {selectedFeature && <Popup>
-            <h2>Feature {selectedFeature.properties.precipgrp} Details</h2>
-            <table>
-              <thead>
-              <tr>
-                <th>Date</th>
-                <th>24-hr precipitation (mm)</th>
-                <th>72-hr precipitation (mm)</th>
-                <th>Runoff risk rating</th>
-              </tr>
-              </thead>
-              <tbody>
-              {[0, 1, 2, 3, 4].map((v) => (
-                  <tr>
-                    <td>{formatDate(new Date(selectedFeature.properties.forecasts.statistics[v].associatedForecast.dt))}</td>
-                    <td>{formatNumeric(selectedFeature.properties.forecasts.statistics[v].next24)}</td>
-                    <td>{formatNumeric(selectedFeature.properties.forecasts.statistics[v].next72)}</td>
-                    <td>{selectedFeature.properties.forecasts.statistics[v].runoffRisk}</td>
-                  </tr>
-                )
-              )}
-              </tbody>
-            </table>
-          </Popup>
-          }
-        </GeoJSON>
-
-        <TileLayer
-          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-      </Map>
+          <TileLayer
+            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+        </Map>
+        <Sidebar />
+      </>
     );
   }
   return <p>loading</p>;

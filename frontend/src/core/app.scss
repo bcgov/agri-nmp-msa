@@ -2,13 +2,77 @@
 
 html, body {
   height: 100%;
+  font-family: sans-serif;
 }
 
 #msa {
   top: 0;
   bottom: 0;
   position: absolute;
-  //height: 70vh;
-  //height: 100%;
+  height: 100%;
   width: 100%;
 }
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a.weatherLink {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.risk-LOW {
+  background-color: #64ff44;
+}
+
+.risk-MEDIUM {
+  background-color: #fffd3b;
+}
+
+.risk-MEDIUM_HIGH {
+  background-color: #ff863a;
+}
+
+.risk-HIGH {
+  background-color: #ff1c23;
+}
+
+table {
+  border-top: 2px solid #555;
+  border-bottom: 2px solid #555;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  border-collapse: collapse;
+
+  td {
+    text-align: center;
+  }
+
+  thead {
+    tr {
+      border-bottom: 2px solid #555;
+      background: #dddddd;
+    }
+
+    th {
+      text-align: center;
+    }
+  }
+
+  tbody {
+    tr:nth-child(2n) {
+      background: #eee;
+    }
+  }
+}
+
+table#runlogs {
+  min-width: 80%;
+  max-width: 100%;
+}
+

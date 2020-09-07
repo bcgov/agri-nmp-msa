@@ -1,4 +1,4 @@
-package bc.gov.agri.services;
+package bc.gov.agri.utilities;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
