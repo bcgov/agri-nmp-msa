@@ -10,7 +10,6 @@ const Sidebar = () => {
   return (
     <div id="sidebar">
       <div id="sidebar-internal">
-        <h3>Sidebar</h3>
         {/* eslint-disable-next-line react/no-danger */}
         <div dangerouslySetInnerHTML={{ __html: pageCustomization.sidebarMarkup }} />
       </div>
