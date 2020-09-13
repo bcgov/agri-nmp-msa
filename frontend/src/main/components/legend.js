@@ -9,10 +9,10 @@ class Legend extends MapControl {
   createLeafletElement(_props) {
 
     const riskValues = [
-      {
-        name: 'Unknown',
-        className: 'risk-UNKNOWN',
-      },
+      // {
+      //   name: 'Unknown',
+      //   className: 'risk-UNKNOWN',
+      // },
       {
         name: 'Low',
         className: 'risk-LOW',
