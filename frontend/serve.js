@@ -15,7 +15,7 @@ app.get('/admin*', (request, response) => {
   response.sendFile(path.resolve(__dirname, 'public/build/admin.html'));
 });
 
-app.get('/*', (reque  st, response) => {
+app.get('/*', (request, response) => {
   response.sendFile(path.resolve(__dirname, 'public/build/generated_index.html'));
 });
 
