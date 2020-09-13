@@ -9,13 +9,18 @@ require('dotenv').config();
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'public', 'build');
-const mainPath = path.resolve(__dirname, 'src', 'index.js');
+const mainPath = path.resolve(__dirname, 'src', 'main/index.js');
+const adminPath = path.resolve(__dirname, 'src', 'admin/index.js');
 
 const config = {
   entry: {
-    bundle: [
+    mainBundle: [
       '@babel/polyfill',
       mainPath,
+    ],
+    adminBundle: [
+      '@babel/polyfill',
+      adminPath,
     ],
   },
   optimization: {
@@ -109,9 +114,22 @@ const config = {
     }),
     new HtmlWebpackPlugin({
       title: 'AGRI NMP MSA',
-      chunks: ['bundle'],
+      chunks: ['mainBundle'],
       filename: 'generated_index.html',
-      // inject: false,
+      inject: true,
+      mobile: true,
+      appMountId: 'root',
+      links: [
+        //css links
+      ],
+      // eslint-disable-next-line global-require
+      template: require('html-webpack-template'),
+    }),
+    new HtmlWebpackPlugin({
+      title: 'AGRI NMP MSA',
+      chunks: ['adminBundle'],
+      filename: 'admin.html',
+      inject: true,
       mobile: true,
       appMountId: 'root',
       links: [

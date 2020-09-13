@@ -12,7 +12,10 @@ const devServerOptions = {
   disableHostCheck: true,
   historyApiFallback: {
     verbose: true,
-    index: '/generated_index.html',
+    rewrites: [
+      { from: /^\/$/, to: '/generated_index.html' },
+      { from: /^\/admin/, to: '/admin.html' },
+    ],
   },
   port: 5001,
   compress: true,

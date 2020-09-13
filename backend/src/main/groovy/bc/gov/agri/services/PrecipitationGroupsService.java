@@ -14,6 +14,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 @Service
 @Transactional
@@ -24,18 +25,28 @@ public class PrecipitationGroupsService {
   public List<WeatherStation> getWeatherStations() {
     List<WeatherStation> stations = new LinkedList<>();
 
-    template.query("select sp.precipgrp, sp.longitude, sp.latitude from station_points sp", row -> {
-      String station = row.getString(1);
-      BigDecimal lon = row.getBigDecimal(2);
-      BigDecimal lat = row.getBigDecimal(3);
-      WeatherStation ws = new WeatherStation();
+    template.query(
+        "select sp.precipgrp, sp.longitude, sp.latitude, sp.userlink from station_points sp",
+        row -> {
+          String station = row.getString(1);
+          BigDecimal lon = row.getBigDecimal(2);
+          BigDecimal lat = row.getBigDecimal(3);
+          String link = row.getString(4);
+          WeatherStation ws = new WeatherStation();
 
-      ws.setLongitude(lon);
-      ws.setLatitude(lat);
-      ws.setId(station);
-      stations.add(ws);
-    });
+          ws.setLongitude(lon);
+          ws.setLatitude(lat);
+          ws.setId(station);
+          ws.setLink(link);
+          stations.add(ws);
+        });
     return stations;
+  }
+
+  public void updateWeatherStation(String id, @Validated WeatherStation station) {
+    template.update("update station_points set userlink = ? where precipgrp = ?",
+        station.getLink(),
+        Integer.parseInt(id));
   }
 
   public LocalDateTime lastForecastUpdate(String stationId) {
@@ -100,8 +111,8 @@ public class PrecipitationGroupsService {
 
     String Q =
         "SELECT pg.precipgrp as id, ST_AsGEOJSON(pg.geom)::json AS geometry, sp.longitude, sp"
-            + ".latitude, sp.userlink as link from precip_groups pg inner join station_points sp on sp.precipgrp = pg"
-            + ".precipgrp;";
+            + ".latitude, sp.userlink as link from precip_groups pg inner join station_points sp "
+            + "on sp.precipgrp = pg" + ".precipgrp;";
 
     template.query(Q, row -> {
       String id = row.getString(1);

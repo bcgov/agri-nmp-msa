@@ -1,16 +1,8 @@
-@import "~leaflet/dist/leaflet.css";
+@import './media.scss';
+@import './colors.scss';
 
 html, body {
-  height: 100%;
   font-family: sans-serif;
-}
-
-#msa {
-  top: 0;
-  bottom: 0;
-  position: absolute;
-  height: 100%;
-  width: 100%;
 }
 
 a {
@@ -27,19 +19,23 @@ a.weatherLink {
 }
 
 .risk-LOW {
-  background-color: #64ff44;
+  background-color: $lowRisk;
 }
 
 .risk-MEDIUM {
-  background-color: #fffd3b;
+  background-color: $mediumRisk;
 }
 
 .risk-MEDIUM_HIGH {
-  background-color: #ff863a;
+  background-color: $mediumHighRisk;
 }
 
 .risk-HIGH {
-  background-color: #ff1c23;
+  background-color: $highRisk;
+}
+
+.risk-UNKNOWN {
+  background-color: $unknownRisk;
 }
 
 table {
@@ -71,8 +67,4 @@ table {
   }
 }
 
-table#runlogs {
-  min-width: 80%;
-  max-width: 100%;
-}
 

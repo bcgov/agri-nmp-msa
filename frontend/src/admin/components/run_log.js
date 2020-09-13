@@ -29,7 +29,7 @@ const RunlogTable = (props) => {
       ))}
       </tbody>
     </table>
-  )
+  );
 };
 
 export default RunlogTable;

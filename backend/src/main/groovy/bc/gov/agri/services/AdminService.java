@@ -2,6 +2,7 @@ package bc.gov.agri.services;
 
 import bc.gov.agri.representations.AdminDashboardReport;
 import bc.gov.agri.representations.OWMForecast;
+import bc.gov.agri.representations.PageCustomization;
 import bc.gov.agri.representations.WeatherStation;
 import bc.gov.agri.representations.geojson.FeatureCollection;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -18,12 +19,12 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 @Service
 @Transactional
-public class AdminDashboardService {
+public class AdminService {
 
-  @Autowired CacheManager cache;
   @Autowired RunLogService runLogService;
   @Autowired JdbcTemplate template;
 
@@ -39,7 +40,6 @@ public class AdminDashboardService {
     report.setRunLogs(runLogService.getRunLogs());
 
     return report;
-
   }
 
 }

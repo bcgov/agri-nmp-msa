@@ -38,7 +38,7 @@ public class UpdateForecastsService {
     }).build();
   }
 
-  @Scheduled(cron = "0 * * * * ?", zone = "America/Vancouver")
+  @Scheduled(cron = "0 3 * * * ?", zone = "America/Vancouver")
   public void updateForecasts() {
     RunLog rl = new RunLog();
     rl.setRunStart(new Date());

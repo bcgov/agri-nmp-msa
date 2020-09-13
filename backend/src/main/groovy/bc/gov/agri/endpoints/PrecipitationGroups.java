@@ -13,10 +13,9 @@ import org.springframework.web.context.request.WebRequest;
 
 @RestController
 @RequestMapping(value = "/v1/groups")
-@CrossOrigin(origins = "*")
 public class PrecipitationGroups {
 
-  final private PrecipitationGroupsService service;
+  private final PrecipitationGroupsService service;
 
   public PrecipitationGroups(PrecipitationGroupsService service) {
     this.service = service;
@@ -24,6 +23,8 @@ public class PrecipitationGroups {
 
   @RequestMapping(value = "/geojson", method = RequestMethod.GET)
   public ResponseEntity<FeatureCollection> geojson(WebRequest request) {
+    //@todo check modification time
+
     final FeatureCollection geoJSON = service.getGeoJSON();
     return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS)).body(geoJSON);
   }

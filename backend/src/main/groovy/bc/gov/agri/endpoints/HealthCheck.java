@@ -13,10 +13,9 @@ import org.springframework.web.context.request.WebRequest;
 
 @RestController
 @RequestMapping(value = "/v1/health")
-@CrossOrigin(origins = "*")
 public class HealthCheck {
 
-  @RequestMapping(value = "/", method = RequestMethod.GET)
+  @RequestMapping(value = {"/", ""}, method = RequestMethod.GET)
   public String healthCheck() {
     return "up";
   }

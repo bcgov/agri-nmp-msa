@@ -4,4 +4,5 @@ class WeatherStation {
   BigDecimal latitude;
   BigDecimal longitude;
   String id;
+  String link;
 }

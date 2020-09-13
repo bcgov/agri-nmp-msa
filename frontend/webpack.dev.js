@@ -7,15 +7,26 @@ require('dotenv').config();
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'public', 'build');
-const mainPath = path.resolve(__dirname, 'src', 'index.js');
+const mainPath = path.resolve(__dirname, 'src', 'main/index.js');
+const adminPath = path.resolve(__dirname, 'src', 'admin/index.js');
 
 const config = {
+  mode: 'development',
+  performance: {
+    hints: false,
+  },
   entry: {
-    bundle: [
+    mainBundle: [
       'webpack/hot/dev-server',
       'react-hot-loader/patch',
       '@babel/polyfill',
       mainPath,
+    ],
+    adminBundle: [
+      'webpack/hot/dev-server',
+      'react-hot-loader/patch',
+      '@babel/polyfill',
+      adminPath,
     ],
   },
   optimization: {
@@ -88,9 +99,6 @@ const config = {
     },
     ],
   },
-  devServer: {
-    historyApiFallback: true,
-  },
   devtool: 'source-map',
   plugins: [
     new MiniCssExtractPlugin({
@@ -104,8 +112,21 @@ const config = {
     }),
     new HtmlWebpackPlugin({
       title: 'AGRI NMP MSA',
-      chunks: ['bundle', 'vendor'],
+      chunks: ['mainBundle'],
       filename: 'generated_index.html',
+      inject: true,
+      mobile: true,
+      appMountId: 'root',
+      links: [
+        //css links
+      ],
+      // eslint-disable-next-line global-require
+      template: require('html-webpack-template'),
+    }),
+    new HtmlWebpackPlugin({
+      title: 'AGRI NMP MSA',
+      chunks: ['adminBundle'],
+      filename: 'admin.html',
       inject: true,
       mobile: true,
       appMountId: 'root',

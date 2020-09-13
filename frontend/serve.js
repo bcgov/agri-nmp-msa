@@ -11,7 +11,11 @@ app.use('/', expressStaticGzip('public/build', {
   maxAge: 1000 * 3600 * 24 * 365,
 }));
 
-app.get('*', (request, response) => {
+app.get('/admin*', (request, response) => {
+  response.sendFile(path.resolve(__dirname, 'public/build/admin.html'));
+});
+
+app.get('/*', (reque  st, response) => {
   response.sendFile(path.resolve(__dirname, 'public/build/generated_index.html'));
 });
 
