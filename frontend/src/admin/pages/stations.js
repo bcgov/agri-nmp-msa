@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import PageCustomizationEditor from '../components/markup_editor';
 import RunlogTable from '../components/run_log';
-import Station_table from '../components/station_table';
+import StationTable from '../components/station_table';
 import CONFIG from '../../shared/config';
 
 const Stations = () => {
@@ -25,13 +25,18 @@ const Stations = () => {
   }, []);
 
   const updateStation = (id, station) => {
-    axios.put(`${CONFIG.API_BASE}/v1/admin/stations/${id}`, station);
+    axios.put(`${CONFIG.API_BASE}/v1/admin/stations/${id}`, station).then(() => {
+      const index = stations.findIndex((st) => st.id === station.id);
+      const updatedStations = [...stations];
+      updatedStations[index] = station;
+      setStations(updatedStations);
+    });
   };
 
   if (loaded) {
     return (
       <div>
-        <Station_table stations={stations} updateStation={updateStation} />
+        <StationTable stations={stations} updateStation={updateStation} />
       </div>
     );
   }

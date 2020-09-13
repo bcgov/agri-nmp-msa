@@ -1,22 +1,31 @@
 import React, { useState } from 'react';
 
-const Station_table = (props) => {
+const StationTable = (props) => {
   const { stations, updateStation } = props;
-  const formatTimestamp = (v) => (v.toLocaleString());
 
-  let [editing, setEditing] = useState(null);
+  const [editing, setEditing] = useState(null);
+  const [dirtyValue, setDirtyValue] = useState(null);
+
+  const beginEdit = (s) => {
+    setEditing(s.id);
+    if (s.link === null) {
+      setDirtyValue('');
+    } else {
+      setDirtyValue(s.link);
+    }
+  };
 
   const save = (s) => {
     setEditing(null);
-    updateStation(s.id, s);
+    const update = {
+      ...s,
+      link: dirtyValue,
+    };
+    updateStation(s.id, update);
   };
 
-  const handlerFor = (s) => {
-    return (event) => {
-      console.log('handling event for ' + s.id);
-      console.dir(event.target.value);
-      s.link = event.target.value;
-    };
+  const cancel = (s) => {
+    setEditing(null);
   };
 
   return (
@@ -31,13 +40,16 @@ const Station_table = (props) => {
       {stations.map((s) => (
         <tr key={s.id}>
           <td>{s.id}</td>
-          <td>
-            {s.id === editing && <input onChange={handlerFor(s)} value={s.link} />}
+          <td className="left">
+            {s.id === editing &&
+            <input type="text" maxLength={255} className="stationLink" onChange={(ev) => setDirtyValue(ev.target.value)}
+                   value={dirtyValue} />}
             {s.id !== editing && s.link}
           </td>
-          <td>
+          <td className="buttons">
+            {s.id === editing && <button onClick={() => cancel(s)}>Cancel</button>}
             {s.id === editing && <button onClick={() => save(s)}>Save</button>}
-            {s.id !== editing && <button onClick={() => setEditing(s.id)} disabled={editing !== null}>Edit</button>}
+            {s.id !== editing && <button onClick={() => beginEdit(s)} disabled={editing !== null}>Edit</button>}
           </td>
         </tr>
       ))}
@@ -46,4 +58,4 @@ const Station_table = (props) => {
   );
 };
 
-export default Station_table;
+export default StationTable;

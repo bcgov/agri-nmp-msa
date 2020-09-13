@@ -5,6 +5,20 @@ table#runlogs {
   max-width: 100%;
 }
 
+table#stations {
+  min-width: 60%;
+  td.buttons {
+    min-width: 6rem;
+    text-align: right;
+  }
+  input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 12pt;
+  }
+}
+
+
 button.btn {
   background: rgb(52,90,255)!important;
   padding: 0.75rem !important;

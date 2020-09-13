@@ -26,7 +26,8 @@ public class PrecipitationGroupsService {
     List<WeatherStation> stations = new LinkedList<>();
 
     template.query(
-        "select sp.precipgrp, sp.longitude, sp.latitude, sp.userlink from station_points sp",
+        "select sp.precipgrp, sp.longitude, sp.latitude, sp.userlink from station_points sp order"
+            + " by sp.precipgrp asc",
         row -> {
           String station = row.getString(1);
           BigDecimal lon = row.getBigDecimal(2);

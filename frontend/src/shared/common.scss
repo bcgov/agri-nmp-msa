@@ -47,6 +47,9 @@ table {
 
   td {
     text-align: center;
+    &.left {
+      text-align: left;
+    }
   }
 
   thead {
