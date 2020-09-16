@@ -6,7 +6,7 @@ const http = require('http');
 const webpackConfig = require('./webpack.dev');
 
 const devServerOptions = {
-  contentBase: path.join(__dirname, 'public/build'),
+  contentBase: [path.join(__dirname, 'public/build'), path.join(__dirname, 'assets')],
   publicPath: '/',
   index: '/generated_index.html',
   disableHostCheck: true,

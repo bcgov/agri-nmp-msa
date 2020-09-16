@@ -10,6 +10,10 @@ app.use('/', expressStaticGzip('public/build', {
   index: false,
   maxAge: 1000 * 3600 * 24 * 365,
 }));
+app.use('/', expressStaticGzip('assets/', {
+  index: false,
+  maxAge: 1000 * 3600 * 24 * 365,
+}));
 
 app.get('/admin*', (request, response) => {
   response.sendFile(path.resolve(__dirname, 'public/build/admin.html'));

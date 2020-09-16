@@ -2,78 +2,92 @@
 
 @import '../shared/common.scss';
 
+$headerHeight: 88px;
+$phoneMapHeight: 300px;
+
 #msa {
   position: fixed;
+  margin: 0;
+  padding: 0;
+
   @include phone() {
-    top: 0;
-    bottom: 30vh;
+    top: $headerHeight;
+    height: $phoneMapHeight;
     right: 0;
     left: 0;
   }
   @include tablet() {
-    top: 0;
+    top: $headerHeight;
     bottom: 0;
     right: 0;
     left: 200px;
   }
   @include desktop() {
-    top: 0;
+    top: $headerHeight;
     bottom: 0;
     right: 0;
     left: 400px;
   }
-  margin: 0;
-  padding: 0;
 }
 
 #sidebar {
   position: fixed;
+  background: white;
 
   @include phone() {
-    top: 70vh;
+    top: $headerHeight+$phoneMapHeight;
     bottom: 0;
     left: 0;
     right: 0;
   }
   @include tablet() {
-    top: 0;
+    top: $headerHeight;
     bottom: 0;
     left: 0;
     width: 200px;
   }
   @include desktop() {
-    top: 0;
+    top: $headerHeight;
     bottom: 0;
     left: 0;
     width: 400px;
   }
   padding: 0;
   margin: 0;
-  overflow-y: scroll;
-overflow-x: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#header {
+  background-color: $logoBackground;
+  overflow: hidden;
+  padding: 16px 16px;
+  margin: 0;
 }
 
 #sidebar-internal {
   position: relative;
   padding: 0.5rem 1rem;
   background-color: white;
+  font-size: 16px;
 }
 
 div.legend {
   background: white;
   padding: 0.5rem;
+
   h4 {
     padding: 0;
     margin: 0 0 0.125rem;
     text-align: center;
   }
+
   ul {
-    padding:0;
+    padding: 0;
     margin: 0;
+
     li {
       color: black;
-      //font-weight: bold;
-      text-transform: uppercase;
       list-style: none;
       text-align: center;
       padding: 0.125rem 0.25rem;

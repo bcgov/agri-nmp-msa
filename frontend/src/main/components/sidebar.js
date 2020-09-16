@@ -1,6 +1,4 @@
-import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
-import CONFIG from '../../shared/config';
+import React, { useContext } from 'react';
 import { PageCustomizationContext } from '../page';
 
 const Sidebar = () => {

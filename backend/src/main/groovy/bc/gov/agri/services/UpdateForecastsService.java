@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.text.StringSubstitutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -23,8 +25,9 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class UpdateForecastsService {
 
-  @Autowired PrecipitationGroupsService service;
-  @Autowired RunLogService runLogService;
+  @Autowired private PrecipitationGroupsService service;
+  @Autowired private RunLogService runLogService;
+  private final Logger logger = LoggerFactory.getLogger(UpdateForecastsService.class);
 
   @Value("${GOV_BC_AGRI_OWM_APIKEY}") private String APIKEY;
 
@@ -40,35 +43,63 @@ public class UpdateForecastsService {
 
   @Scheduled(cron = "0 3 * * * ?", zone = "America/Vancouver")
   public void updateForecasts() {
+    Duration FRESHNESS = Duration.ofHours(6);
+
     RunLog rl = new RunLog();
     rl.setRunStart(new Date());
+    StringBuffer remarks = new StringBuffer();
 
     List<WeatherStation> stations = service.getWeatherStations();
+    AtomicInteger attemptedUpdates = new AtomicInteger(0);
     AtomicInteger groupsUpdated = new AtomicInteger(0);
+    AtomicInteger errorCount = new AtomicInteger(0);
+
+    remarks.append("Using minimum freshness duration ").append(FRESHNESS.toString()).append("\n");
 
     stations.forEach(weatherStation -> {
       LocalDateTime lastUpdate = service.lastForecastUpdate(weatherStation.getId());
       boolean doUpdate = false;
       if (lastUpdate == null) {
+        remarks
+            .append("No previous update for station ")
+            .append(weatherStation.getId())
+            .append(", forcing update\n");
         doUpdate = true;
       } else {
-
-        LocalDateTime cutoff = LocalDateTime.now().minus(Duration.ofHours(6));
+        LocalDateTime cutoff = LocalDateTime.now().minus(FRESHNESS);
         if (lastUpdate.isBefore(cutoff)) {
           doUpdate = true;
         }
       }
 
       if (doUpdate) {
-        groupsUpdated.incrementAndGet();
-        OWMForecast owmForecast = this.getOpenWeatherMap(weatherStation.getLatitude().toString(),
-            weatherStation.getLongitude().toString());
-        service.storeForecast(weatherStation.getId(), owmForecast);
+        attemptedUpdates.incrementAndGet();
+        try {
+          OWMForecast owmForecast = this.getOpenWeatherMap(weatherStation.getLatitude().toString(),
+              weatherStation.getLongitude().toString());
+          service.storeForecast(weatherStation.getId(), owmForecast);
+          groupsUpdated.incrementAndGet();
+        } catch (Exception e) {
+          remarks
+              .append("An error occurred while updating station ")
+              .append(weatherStation.getId())
+              .append(", see application log for details\n");
+          logger.warn("Caught an exception while updating forecasts", e);
+          errorCount.incrementAndGet();
+        }
       }
     });
 
+    if (attemptedUpdates.get() == 0) {
+      remarks.append("All stations were fresh\n");
+    }
+
+    remarks.append("Update run complete");
+
     rl.setRunFinish(new Date());
     rl.setGroupsUpdated(groupsUpdated.get());
+    rl.setRemarks(remarks.toString());
+    rl.setErrorCount(errorCount.get());
     runLogService.saveRunLog(rl);
   }
 

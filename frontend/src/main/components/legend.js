@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import styles from '../../shared/colors.scss';
 import { Control, DomUtil } from 'leaflet';
 import { MapControl, withLeaflet } from 'react-leaflet';
 
@@ -9,10 +8,6 @@ class Legend extends MapControl {
   createLeafletElement(_props) {
 
     const riskValues = [
-      // {
-      //   name: 'Unknown',
-      //   className: 'risk-UNKNOWN',
-      // },
       {
         name: 'Low',
         className: 'risk-LOW',
@@ -22,7 +17,7 @@ class Legend extends MapControl {
         className: 'risk-MEDIUM',
       },
       {
-        name: 'Medium High',
+        name: 'Med-High',
         className: 'risk-MEDIUM_HIGH',
       },
       {

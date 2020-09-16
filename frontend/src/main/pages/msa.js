@@ -1,17 +1,18 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { MapControl, GeoJSON, Map, Popup, TileLayer } from 'react-leaflet';
-import { Control, DomUtil } from 'leaflet';
-import Legend from '../components/legend';
-import Sidebar from '../components/sidebar';
-import CONFIG from '../../shared/config';
+import React, { useContext, useEffect, useState } from 'react';
+import { GeoJSON, Map, Popup, TileLayer, } from 'react-leaflet';
 import styles from '../../shared/colors.scss';
+import CONFIG from '../../shared/config';
+import Legend from '../components/legend';
+import Loading from '../../shared/components/loading';
+import Sidebar from '../components/sidebar';
+import { PageCustomizationContext } from '../page';
 
 const Msa = () => {
-
   const [geojson, setGeoJSON] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [selectedFeature, setSelectedFeature] = useState(null);
+  const pageCustomization = useContext(PageCustomizationContext);
 
   useEffect(() => {
     axios.get(`${CONFIG.API_BASE}/v1/groups/geojson`).then((response) => {
@@ -65,7 +66,6 @@ const Msa = () => {
     return style;
   };
 
-
   function onEachFeature(component, feature, layer) {
     layer.on({
       click: () => {
@@ -76,6 +76,26 @@ const Msa = () => {
 
   const formatDate = (v) => (v.toLocaleDateString());
   const formatNumeric = (v) => (v.toFixed(2));
+  const renderLinkTD = (v, formatted24, formatted72) => {
+    const worksheetLink = pageCustomization.armLink.replace('{24}', formatted24).replace('{72}', formatted72);
+
+    switch (v) {
+      case 0:
+      case 1:
+        return (
+          <a target="_" href={worksheetLink}>
+            Field Risk Assessment
+          </a>
+        );
+      default:
+        return (<span>N/A</span>);
+    }
+  };
+  const riskMap = {};
+  riskMap.LOW = 'Low';
+  riskMap.MEDIUM = 'Medium';
+  riskMap.MEDIUM_HIGH = 'Med-High';
+  riskMap.HIGH = 'High';
 
   if (loaded) {
     return (
@@ -87,11 +107,11 @@ const Msa = () => {
         >
           <GeoJSON data={geojson} onEachFeature={onEachFeature.bind(null, this)} style={getStyle}>
 
-            {selectedFeature && (<Popup maxWidth="400">
-                <h2>Feature {selectedFeature.properties.precipgrp} Details</h2>
-                {selectedFeature.properties.link &&
-                <a className={`weatherLink`} target='_' href={selectedFeature.properties.link}>Weather Report</a>}
-                <table className={'riskTable'}>
+            {selectedFeature && (
+              <Popup maxWidth="400">
+                {(selectedFeature.properties.link && pageCustomization.enableWeatherLink)
+                && <a className="weatherLink" target="_" href={selectedFeature.properties.link}>Weather Report</a>}
+                <table className="riskTable">
                   <thead>
                   <tr>
                     <th>Date</th>
@@ -103,33 +123,26 @@ const Msa = () => {
                   </thead>
                   <tbody>
                   {[0, 1, 2, 3, 4].map((v) => {
-                      const s = selectedFeature.properties.forecasts.statistics[v];
-                      const formatted24 = formatNumeric(s.next24);
-                      const formatted72 = formatNumeric(s.next72);
-                      const worksheetLink = `https://arm-web-agri-nmp-prod.pathfinder.gov.bc.ca/?24=${formatted24}&72=${formatted72}`;
-                      return (
-                        <tr>
-                          <td>{formatDate(new Date(s.associatedForecast.dt))}</td>
-                          <td>{formatNumeric(s.next24)}</td>
-                          <td>{formatNumeric(s.next72)}</td>
-                          <td className={`risk-${s.runoffRisk}`}>
-                            {s.runoffRisk}
-                          </td>
-                          <td>
-                            {v in [0, 1] && <a target="_" href={worksheetLink}>
-                              Field Risk Assessment
-                            </a>
-                            }
-                          </td>
-                        </tr>
-                      );
-                    }
-                  )}
+                    const s = selectedFeature.properties.forecasts.statistics[v];
+                    const formatted24 = formatNumeric(s.next24);
+                    const formatted72 = formatNumeric(s.next72);
+
+                    return (
+                      <tr key={`forecast-${v}`}>
+                        <td>{formatDate(new Date(s.associatedForecast.dt))}</td>
+                        <td>{formatNumeric(s.next24)}</td>
+                        <td>{formatNumeric(s.next72)}</td>
+                        <td className={`risk-${s.runoffRisk}`}>
+                          {riskMap[s.runoffRisk]}
+                        </td>
+                        <td>{renderLinkTD(v, formatted24, formatted72)}</td>
+                      </tr>
+                    );
+                  })}
                   </tbody>
                 </table>
               </Popup>
-            )
-            }
+            )}
           </GeoJSON>
 
           <TileLayer
@@ -140,11 +153,10 @@ const Msa = () => {
           <Legend />
 
         </Map>
-        <Sidebar />
       </>
     );
   }
-  return <p>loading</p>;
+  return <Loading />;
 };
 
 export default Msa;

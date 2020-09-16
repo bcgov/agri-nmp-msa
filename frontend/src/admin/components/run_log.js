@@ -5,7 +5,7 @@ const RunlogTable = (props) => {
   const formatTimestamp = (v) => (v.toLocaleString());
 
   return (
-    <table id={"runlogs"}>
+    <table id={'runlogs'}>
       <thead>
       <tr>
         <th>ID</th>
@@ -24,7 +24,9 @@ const RunlogTable = (props) => {
           <td>{formatTimestamp(new Date(rl.runFinish))}</td>
           <td>{rl.groupsUpdated}</td>
           <td>{rl.errorCount}</td>
-          <td>{rl.remarks || '--'}</td>
+          <td className={'remarks'}>
+            <div className={'content'}>{rl.remarks || '--'}</div>
+          </td>
         </tr>
       ))}
       </tbody>

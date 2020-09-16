@@ -1,8 +1,22 @@
 @import './media.scss';
 @import './colors.scss';
 
-html, body {
-  font-family: sans-serif;
+@font-face {
+  font-family: 'Myriad-Pro';
+  src: url('/fonts/MyriadWebPro.ttf');
+}
+
+body {
+  font-family: Myriad-Pro, Calibri, Arial, 'sans-serif';
+  color: #494949;
+  font-size: 16px;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  padding: 0;
+  margin: 0;
 }
 
 a {
@@ -39,14 +53,14 @@ a.weatherLink {
 }
 
 table {
-  border-top: 2px solid #555;
-  border-bottom: 2px solid #555;
   margin-bottom: 4px;
   margin-top: 4px;
   border-collapse: collapse;
 
+
   td {
     text-align: center;
+
     &.left {
       text-align: left;
     }
@@ -54,18 +68,24 @@ table {
 
   thead {
     tr {
-      border-bottom: 2px solid #555;
-      background: #dddddd;
+      background: $tableHeaderBackground;
     }
 
     th {
       text-align: center;
+      border-top: 2px solid white;
+      border-bottom: 1px solid black;
+      color: white;
     }
   }
 
   tbody {
-    tr:nth-child(2n) {
-      background: #eee;
+    td {
+      border: 0.5px solid black;
+    }
+
+    tr:hover {
+      background: #eee
     }
   }
 }

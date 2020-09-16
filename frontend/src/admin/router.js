@@ -9,15 +9,19 @@ import Stations from './pages/stations';
 const Router = () => {
   return (
     <BrowserRouter>
-      <h2>Administration</h2>
+      <div id="header">
+        <img src="/images/gov3_bc_logo.png" width={155} height={52} alt={'BC Government Logo'} />
+        <h1>NMP MSA Administration</h1>
+      </div>
       <Navbar />
-      <hr />
-      <Switch>
-        <Route path="/admin/logs" component={RunLogs} />
-        <Route path="/admin/stations" component={Stations} />
-        <Route path="/admin/page" component={PageCustomization} />
-        <Route component={RunLogs} />
-      </Switch>
+      <div className={'container'}>
+        <Switch>
+          <Route path="/admin/logs" component={RunLogs} />
+          <Route path="/admin/stations" component={Stations} />
+          <Route path="/admin/page" component={PageCustomization} />
+          <Route component={RunLogs} />
+        </Switch>
+      </div>
     </BrowserRouter>
   );
 };

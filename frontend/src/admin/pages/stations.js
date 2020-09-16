@@ -1,12 +1,8 @@
-import { Editor } from '@tinymce/tinymce-react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router';
-import PageCustomizationEditor from '../components/markup_editor';
-import RunlogTable from '../components/run_log';
-import StationTable from '../components/station_table';
+import Loading from '../../shared/components/loading';
 import CONFIG from '../../shared/config';
+import StationTable from '../components/station_table';
 
 const Stations = () => {
   const [stations, setStations] = useState([]);
@@ -36,11 +32,13 @@ const Stations = () => {
   if (loaded) {
     return (
       <div>
+        <h2>Weather Stations</h2>
+
         <StationTable stations={stations} updateStation={updateStation} />
       </div>
     );
   }
-  return <p>loading</p>;
+  return (<Loading />);
 };
 
 export default Stations;

@@ -111,30 +111,14 @@ const config = {
       _GA_ENABLED: 'GA_ENABLED' in process.env ? JSON.stringify(process.env.GA_ENABLED) : 'false',
     }),
     new HtmlWebpackPlugin({
-      title: 'AGRI NMP MSA',
       chunks: ['mainBundle'],
       filename: 'generated_index.html',
-      inject: true,
-      mobile: true,
-      appMountId: 'root',
-      links: [
-        //css links
-      ],
-      // eslint-disable-next-line global-require
-      template: require('html-webpack-template'),
+      template: path.resolve(__dirname, 'templates/main.html'),
     }),
     new HtmlWebpackPlugin({
-      title: 'AGRI NMP MSA',
       chunks: ['adminBundle'],
       filename: 'admin.html',
-      inject: true,
-      mobile: true,
-      appMountId: 'root',
-      links: [
-        //css links
-      ],
-      // eslint-disable-next-line global-require
-      template: require('html-webpack-template'),
+      template: path.resolve(__dirname, 'templates/admin.html'),
     }),
   ],
 };

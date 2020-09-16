@@ -1,8 +1,9 @@
-import React from 'react';
-
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CONFIG from '../shared/config';
+import Loading from '../shared/components/loading';
+import Sidebar from './components/sidebar';
+import Msa from './pages/msa';
 
 const PageCustomizationContext = React.createContext({ sidebarMarkup: null });
 
@@ -20,11 +21,16 @@ const PageStructure = (props) => {
   }, []);
 
   if (!loaded) {
-    return (<p>Loading...</p>);
+    return (<Loading />);
   }
+
   return (
     <PageCustomizationContext.Provider value={pageCustomization}>
-      {children}
+      <div id="header">
+        <img src="/images/gov3_bc_logo.png" width={155} height={52} alt={'BC Government Logo'} />
+      </div>
+      <Sidebar />
+      <Msa />
     </PageCustomizationContext.Provider>
   );
 

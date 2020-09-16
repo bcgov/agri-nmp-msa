@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import Loading from '../../shared/components/loading';
 import CONFIG from '../../shared/config';
 import RunlogTable from '../components/run_log';
 
@@ -22,12 +23,12 @@ const RunLogs = () => {
   if (loaded) {
     return (
       <div>
-        <h4>Run Logs</h4>
+        <h2>Recent Update History</h2>
         <RunlogTable runlogs={report.runLogs} />
       </div>
     );
   }
-  return <p>loading</p>;
+  return (<Loading />);
 };
 
 export default RunLogs;
