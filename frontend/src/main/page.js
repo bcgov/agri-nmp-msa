@@ -7,8 +7,7 @@ import Msa from './pages/msa';
 
 const PageCustomizationContext = React.createContext({ sidebarMarkup: null });
 
-const PageStructure = (props) => {
-  const { children } = props;
+const PageStructure = () => {
   const [pageCustomization, setPageCustomization] = useState([]);
   const [loaded, setLoaded] = useState(false);
 

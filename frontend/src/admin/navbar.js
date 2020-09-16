@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
+import { KeycloakContext } from './auth';
 
 const Navbar = (props) => {
   const { history } = props;
+  const keycloak = useContext(KeycloakContext);
+
 
   const nav = (path, name) => ({
     path,
@@ -19,6 +22,8 @@ const Navbar = (props) => {
   useEffect(() => {
     setActiveLink(history.location.pathname);
   }, [history.location.pathname]);
+
+  console.dir(keycloak);
 
   return (
     <div className={'topNav nav'}>
