@@ -18,6 +18,20 @@ const Navbar = (props) => {
     nav('/admin/page', 'Page Customization'),
   ];
 
+  const bestName = () => {
+    const preferenceOrder = ['name', 'preferred_username', 'given_name', 'sub'];
+
+    for (const p of preferenceOrder) {
+      if ((p in keycloak.idTokenParsed) &&
+        (keycloak.idTokenParsed[p] !== null) &&
+        (keycloak.idTokenParsed[p].length > 0)) {
+        return keycloak.idTokenParsed[p];
+      }
+    }
+
+    return 'User';
+  };
+
   let [activeLink, setActiveLink] = useState(null);
   useEffect(() => {
     setActiveLink(history.location.pathname);
@@ -39,6 +53,14 @@ const Navbar = (props) => {
             </button>
           </li>
         ))}
+        <li className={'filler'}></li>
+        <li className={'right'}>
+          <button
+            onClick={() => keycloak.logout()}
+          >
+            Logout {bestName()}
+          </button>
+        </li>
       </ul>
     </div>
   );

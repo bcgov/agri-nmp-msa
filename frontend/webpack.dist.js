@@ -4,7 +4,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const SriPlugin = require('webpack-subresource-integrity');
 require('dotenv').config();
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
@@ -99,10 +98,6 @@ const config = {
   devtool: 'source-map',
   plugins: [
     new Webpack.HashedModuleIdsPlugin(),
-    new SriPlugin({
-      hashFuncNames: ['sha256', 'sha384'],
-      enabled: process.env.NODE_ENV === 'production',
-    }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',

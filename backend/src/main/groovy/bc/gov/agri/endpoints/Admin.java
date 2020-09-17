@@ -20,6 +20,7 @@ import org.springframework.web.context.request.WebRequest;
 
 @RestController
 @RequestMapping(value = "/v1/admin")
+@CrossOrigin(origins = "*")
 public class Admin {
 
   private final AdminService adminService;

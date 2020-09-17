@@ -1,3 +1,4 @@
+import axios from 'axios';
 import Keycloak from 'keycloak-js';
 import React, { useEffect, useState } from 'react';
 
@@ -8,21 +9,20 @@ const AuthRequired = (props) => {
 
     const [authenticated, setAuthenticated] = useState(false);
 
-    const [keycloakInstance] = useState(Keycloak({
-        clientId: 'nmp',
-        realm: 'msa',
-        url: 'http://localhost:8080/auth',
+    const [keycloakInstance] = useState(Keycloak(
+      {
+        clientId: window.KEYCLOAK_CLIENT_ID,
+        realm: window.KEYCLOAK_REALM,
+        url: window.KEYCLOAK_URL,
         flow: 'implicit',
-      })
-    );
-
+      }));
     useEffect(() => {
       keycloakInstance.init(
         {
           checkLoginIframe: false,
           onLoad: 'check-sso',
           flow: 'implicit',
-        }
+        },
       ).then((auth) => {
         setAuthenticated(auth);
       });
@@ -31,6 +31,14 @@ const AuthRequired = (props) => {
     const signin = () => {
       keycloakInstance.login();
     };
+
+    useEffect(() => {
+      console.dir('authentication state changed');
+      if (keycloakInstance.authenticated) {
+        axios.defaults.headers.common.authorization = `Bearer ${keycloakInstance.idToken}`;
+        console.dir(axios.defaults.headers);
+      }
+    }, [authenticated]);
 
     if (authenticated) {
       return (
@@ -41,12 +49,20 @@ const AuthRequired = (props) => {
     }
 
     return (
-      <p>Click to <a onClick={() => {
-        signin();
-      }}
-      >signin
-      </a>
-      </p>
+      <div className={'authRequired'}>
+        <h1>Administration Console</h1>
+
+        <p>Authentication is required to access this resource.</p>
+        <button
+          id={'loginButton'}
+          onClick={() => {
+            signin();
+          }}
+        >
+          Authenticate
+        </button>
+
+      </div>
     );
   }
 ;

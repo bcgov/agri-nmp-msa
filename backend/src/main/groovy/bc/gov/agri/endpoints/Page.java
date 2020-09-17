@@ -16,6 +16,7 @@ import org.springframework.web.context.request.WebRequest;
 
 @RestController
 @RequestMapping(value = "/v1/page")
+@CrossOrigin(origins = "*")
 public class Page {
 
   private final PageCustomizationService service;

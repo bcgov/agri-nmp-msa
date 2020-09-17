@@ -13,6 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 
 @RestController
 @RequestMapping(value = "/v1/groups")
+@CrossOrigin(origins = "*")
 public class PrecipitationGroups {
 
   private final PrecipitationGroupsService service;

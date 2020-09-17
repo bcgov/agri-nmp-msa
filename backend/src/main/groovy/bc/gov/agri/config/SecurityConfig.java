@@ -1,6 +1,7 @@
 package bc.gov.agri.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -13,18 +14,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
+        .cors()
+        .and()
+        .csrf()
+        .disable()
         .authorizeRequests()
         .requestMatchers(CorsUtils::isPreFlightRequest)
         .permitAll()
+        .antMatchers(HttpMethod.GET, "/v1/admin/dashboard")
+        .authenticated()
+        .antMatchers(HttpMethod.GET, "/v1/admin/stations")
+        .authenticated()
+        .antMatchers(HttpMethod.GET, "/v1/admin/stations/**")
+        .authenticated()
+        .antMatchers(HttpMethod.PUT, "/v1/admin/stations/**")
+        .authenticated()
+        .antMatchers(HttpMethod.POST, "/v1/page")
+        .authenticated()
         .anyRequest()
         .permitAll()
         .and()
-        .csrf()
-        .disable();
-
-    //        .authenticated()
-    //        .and()
-    //        .httpBasic();
+        .oauth2ResourceServer()
+        .jwt();
   }
+
 
 }

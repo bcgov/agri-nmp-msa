@@ -6,13 +6,22 @@ const expressStaticGzip = require('express-static-gzip');
 
 const port = 5001;
 
+function cacheHeaders(res, p) {
+  if (express.static.mime.lookup(p) === 'text/html') {
+    res.setHeader('Cache-Control', 'public, max-age=0');
+  }
+}
+
 app.use('/', expressStaticGzip('public/build', {
   index: false,
-  maxAge: 1000 * 3600 * 24 * 365,
+  maxAge: 1000 * 3600,
+  setHeaders: cacheHeaders,
+
 }));
 app.use('/', expressStaticGzip('assets/', {
   index: false,
-  maxAge: 1000 * 3600 * 24 * 365,
+  maxAge: 1000 * 3600,
+  setHeaders: cacheHeaders,
 }));
 
 app.get('/admin*', (request, response) => {

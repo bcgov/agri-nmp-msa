@@ -11,10 +11,12 @@ const RunLogs = () => {
 
   useEffect(() => {
     const promises = [
+
       axios.get(`${CONFIG.API_BASE}/v1/admin/dashboard`).then((response) => {
         setReport(response.data);
       }),
     ];
+    console.dir(axios.defaults.headers);
     Promise.all(promises).then(() => {
       setLoaded(true);
     });
