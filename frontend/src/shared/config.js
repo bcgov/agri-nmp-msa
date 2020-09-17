@@ -1,8 +1,9 @@
-/* global _API_BASE, _GA_ENABLED */
+/* global _API_BASE, _GA_ENABLED, _GA_PROPERTY */
 
 const CONFIG = {
   API_BASE: _API_BASE,
   GA_ENABLED: _GA_ENABLED,
+  GA_PROPERTY: _GA_PROPERTY,
 };
 
 export default CONFIG;

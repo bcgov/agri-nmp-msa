@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 
 const KeycloakContext = React.createContext({});
 
+/* globals _KEYCLOAK_REALM, _KEYCLOAK_CLIENT_ID, _KEYCLOAK_URL */
+
 const AuthRequired = (props) => {
     const { children } = props;
 
@@ -11,9 +13,9 @@ const AuthRequired = (props) => {
 
     const [keycloakInstance] = useState(Keycloak(
       {
-        clientId: window.KEYCLOAK_CLIENT_ID,
-        realm: window.KEYCLOAK_REALM,
-        url: window.KEYCLOAK_URL,
+        clientId: _KEYCLOAK_CLIENT_ID,
+        realm: _KEYCLOAK_REALM,
+        url: _KEYCLOAK_URL,
         flow: 'implicit',
       }));
     useEffect(() => {
