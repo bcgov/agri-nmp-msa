@@ -16,6 +16,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+/*
+alter table forecast alter column rain type numeric(7,3);
+alter table forecast alter column snow type numeric(7,3);
+alter table forecast alter column next24 type numeric(7,3);
+alter table forecast alter column next72 type numeric(7,3);
+*/
+
 @Service
 @Transactional
 public class PrecipitationGroupsService {
