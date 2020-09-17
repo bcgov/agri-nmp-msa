@@ -105,8 +105,6 @@ const config = {
     new CompressionPlugin(),
     new Webpack.DefinePlugin({
       _API_BASE: 'API_BASE' in process.env ? JSON.stringify(process.env.API_BASE) : '\'http://localhost:8080\'',
-      _GA_ENABLED: 'GA_ENABLED' in process.env ? JSON.stringify(process.env.GA_ENABLED) : 'false',
-      _GA_PROPERTY: 'GA_PROPERTY' in process.env ? JSON.stringify(process.env.GA_PROPERTY) : 'null',
       _KEYCLOAK_CLIENT_ID: 'KEYCLOAK_CLIENT_ID' in process.env ? JSON.stringify(process.env.KEYCLOAK_CLIENT_ID) : '\'nmp\'',
       _KEYCLOAK_URL: 'KEYCLOAK_URL' in process.env ? JSON.stringify(process.env.KEYCLOAK_URL) : '\'http://localhost:8085/auth/\'',
       _KEYCLOAK_REALM: 'KEYCLOAK_REALM' in process.env ? JSON.stringify(process.env.KEYCLOAK_REALM) : '\'msa\'',
@@ -114,6 +112,10 @@ const config = {
     new HtmlWebpackPlugin({
       chunks: ['mainBundle'],
       filename: 'generated_index.html',
+      templateParameters: {
+        googleAnalyticsEnabled: 'GA_ENABLED' in process.env ? JSON.parse(process.env.GA_ENABLED) : false,
+        googleAnalyticsProperty: 'GA_PROPERTY' in process.env ? process.env.GA_PROPERTY : 'unset',
+      },
       template: path.resolve(__dirname, 'templates/main.html'),
     }),
     new HtmlWebpackPlugin({
