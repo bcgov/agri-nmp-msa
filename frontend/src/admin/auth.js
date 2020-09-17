@@ -1,4 +1,3 @@
-import axios from 'axios';
 import Keycloak from 'keycloak-js';
 import React, { useEffect, useState } from 'react';
 
@@ -16,14 +15,12 @@ const AuthRequired = (props) => {
         clientId: _KEYCLOAK_CLIENT_ID,
         realm: _KEYCLOAK_REALM,
         url: _KEYCLOAK_URL,
-        flow: 'implicit',
       }));
     useEffect(() => {
       keycloakInstance.init(
         {
           checkLoginIframe: false,
           onLoad: 'check-sso',
-          flow: 'implicit',
         },
       ).then((auth) => {
         setAuthenticated(auth);
@@ -33,14 +30,6 @@ const AuthRequired = (props) => {
     const signin = () => {
       keycloakInstance.login();
     };
-
-    useEffect(() => {
-      console.dir('authentication state changed');
-      if (keycloakInstance.authenticated) {
-        axios.defaults.headers.common.authorization = `Bearer ${keycloakInstance.idToken}`;
-        console.dir(axios.defaults.headers);
-      }
-    }, [authenticated]);
 
     if (authenticated) {
       return (

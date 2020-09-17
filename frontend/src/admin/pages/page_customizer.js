@@ -1,7 +1,8 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Loading from '../../shared/components/loading';
 import CONFIG from '../../shared/config';
+import { KeycloakContext } from '../auth';
 import MarkupEditor from '../components/markup_editor';
 
 const PageCustomization = () => {
@@ -10,18 +11,22 @@ const PageCustomization = () => {
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const [state, setState] = useState({});
+  const keycloak = useContext(KeycloakContext);
 
   useEffect(() => {
-    const promises = [
 
-      axios.get(`${CONFIG.API_BASE}/v1/page`).then((response) => {
-        setState(response.data);
-      }),
 
-    ];
-    Promise.all(promises).then(() => {
-      setLoaded(true);
-      setStatusText('Loaded');
+    keycloak.updateToken(30).then(() => {
+      const authHeader = `Bearer ${keycloak.idToken}`;
+      const promises = [
+        axios.get(`${CONFIG.API_BASE}/v1/page`, { headers: { authorization: authHeader } }).then((response) => {
+          setState(response.data);
+        }),
+      ];
+      Promise.all(promises).then(() => {
+        setLoaded(true);
+        setStatusText('Loaded');
+      });
     });
   }, []);
 
@@ -36,10 +41,15 @@ const PageCustomization = () => {
 
   const save = () => {
     setSaving(true);
-    axios.post(`${CONFIG.API_BASE}/v1/page`, state).then(() => {
-      setSaving(false);
-      setDirty(false);
-      setStatusText('Saved');
+
+    keycloak.updateToken(30).then(() => {
+      const authHeader = `Bearer ${keycloak.idToken}`;
+
+      axios.post(`${CONFIG.API_BASE}/v1/page`, state, { headers: { authorization: authHeader } }).then(() => {
+        setSaving(false);
+        setDirty(false);
+        setStatusText('Saved');
+      });
     });
   };
 

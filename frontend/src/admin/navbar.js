@@ -37,8 +37,6 @@ const Navbar = (props) => {
     setActiveLink(history.location.pathname);
   }, [history.location.pathname]);
 
-  console.dir(keycloak);
-
   return (
     <div className={'topNav nav'}>
       <ul>
