@@ -10,8 +10,8 @@ import org.springframework.web.cors.CorsUtils;
 
 @Configuration
 @EnableWebSecurity
-@Profile("!dev")
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@Profile("dev")
+public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -24,15 +24,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .requestMatchers(CorsUtils::isPreFlightRequest)
         .permitAll()
         .antMatchers(HttpMethod.GET, "/v1/admin/dashboard")
-        .authenticated()
+        .hasRole("NMPAdmin")
         .antMatchers(HttpMethod.GET, "/v1/admin/stations")
-        .authenticated()
+        .hasRole("NMPAdmin")
         .antMatchers(HttpMethod.GET, "/v1/admin/stations/**")
-        .authenticated()
+        .hasRole("NMPAdmin")
         .antMatchers(HttpMethod.PUT, "/v1/admin/stations/**")
-        .authenticated()
+        .hasRole("NMPAdmin")
         .antMatchers(HttpMethod.POST, "/v1/page")
-        .authenticated()
+        .hasRole("NMPAdmin")
         .anyRequest()
         .permitAll()
         .and()
