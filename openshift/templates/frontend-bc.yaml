@@ -1,0 +1,82 @@
+---
+kind: Template
+apiVersion: v1
+labels:
+  template: nmp-msa-frontend-bc-template
+metadata:
+  name: frontend-bc
+  creationTimestamp:
+parameters:
+  - name: ENV_NAME
+    displayName: Environment Name
+    description: Environment Name
+    required: true
+objects:
+  - kind: ImageStream
+    apiVersion: image.openshift.io/v1
+    metadata:
+      annotations:
+        description: NMP MSA Frontend Image Stream
+      name: nmp-msa-frontend
+    spec:
+      lookupPolicy:
+        local: false
+  - kind: BuildConfig
+    apiVersion: build.openshift.io/v1
+    metadata:
+      annotations:
+        description: NMP MSA Frontend builder
+      name: nmp-msa-frontend
+    spec:
+      nodeSelector: null
+      output:
+        to:
+          kind: ImageStreamTag
+          name: nmp-msa-frontend:latest
+      postCommit: { }
+      resources:
+        limits:
+          cpu: 2000m
+          memory: 2G
+        requests:
+          cpu: 500m
+          memory: 200M
+      runPolicy: SerialLatestOnly
+      source:
+        contextDir: frontend
+        git:
+          uri: "https://github.com/plasticviking/agri-nmp-msa.git"
+        type: Git
+      strategy:
+        sourceStrategy:
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: API_BASE
+              value: 'https://nmp-msa-dev-agri-nmp-dev.pathfinder.gov.bc.ca'
+            - name: GA_ENABLED
+              value: 'true'
+            - name: GA_PROPERTY
+              valueFrom:
+                secretKeyRef:
+                  name: nmp-msa-secrets
+                  key: GOOGLE_ANALYTICS_PROPERTY
+            - name: KEYCLOAK_URL
+                configMapRef:
+                  name: nmp-msa-frontend-build-config
+                  key: KEYCLOAK_URL
+            - name: KEYCLOAK_CLIENT_ID
+                configMapRef:
+                  name: nmp-msa-frontend-build-config
+                  key: KEYCLOAK_CLIENT_ID
+             - name: KEYCLOAK_REALM
+                configMapRef:
+                  name: nmp-msa-frontend-build-config
+                  key: KEYCLOAK_REALM
+          from:
+            kind: ImageStreamTag
+            name: 'nodejs:10'
+            namespace: openshift
+        type: Source
+    status:
+      lastVersion: 0

@@ -1,0 +1,93 @@
+@import './media.scss';
+@import './colors.scss';
+
+@font-face {
+  font-family: 'Myriad-Pro';
+  src: url('/fonts/MyriadWebPro.ttf');
+}
+
+body {
+  font-family: Myriad-Pro, Calibri, Arial, 'sans-serif';
+  color: #494949;
+  font-size: 16px;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a.weatherLink {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.risk-LOW {
+  background-color: $lowRisk;
+}
+
+.risk-MEDIUM {
+  background-color: $mediumRisk;
+}
+
+.risk-MEDIUM_HIGH {
+  background-color: $mediumHighRisk;
+}
+
+.risk-HIGH {
+  background-color: $highRisk;
+}
+
+.risk-UNKNOWN {
+  background-color: $unknownRisk;
+}
+
+table {
+  margin-bottom: 4px;
+  margin-top: 4px;
+  border-collapse: collapse;
+
+
+  td {
+    text-align: center;
+
+    &.left {
+      text-align: left;
+    }
+  }
+
+  thead {
+    tr {
+      background: $tableHeaderBackground;
+    }
+
+    th {
+      text-align: center;
+      border-top: 2px solid white;
+      border-bottom: 1px solid black;
+      color: white;
+    }
+  }
+
+  tbody {
+    td {
+      border: 0.5px solid black;
+    }
+
+    tr:hover {
+      background: #eee
+    }
+  }
+}
+
+
