@@ -15,6 +15,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
+
     http
         .cors()
         .and()
@@ -24,21 +25,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .requestMatchers(CorsUtils::isPreFlightRequest)
         .permitAll()
         .antMatchers(HttpMethod.GET, "/v1/admin/dashboard")
-        .authenticated()
+        .hasRole("NMPAdmin")
         .antMatchers(HttpMethod.GET, "/v1/admin/stations")
-        .authenticated()
+        .hasRole("NMPAdmin")
         .antMatchers(HttpMethod.GET, "/v1/admin/stations/**")
-        .authenticated()
+        .hasRole("NMPAdmin")
         .antMatchers(HttpMethod.PUT, "/v1/admin/stations/**")
-        .authenticated()
+        .hasRole("NMPAdmin")
         .antMatchers(HttpMethod.POST, "/v1/page")
-        .authenticated()
+        .hasRole("NMPAdmin")
         .anyRequest()
         .permitAll()
         .and()
         .oauth2ResourceServer()
         .jwt();
   }
-
-
 }
