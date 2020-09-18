@@ -1,0 +1,169 @@
+---
+kind: Template
+apiVersion: v1
+labels:
+  template: nmp-msa-postgresql-persistent-template
+metadata:
+  name: postgresql-dc
+  creationTimestamp:
+parameters:
+  - name: ENV_NAME
+    displayName: Environment Name
+    description: Environment Name
+    required: true
+  - name: CPU_REQUEST
+    displayName: Requested CPU
+    description: Requested CPU
+    required: true
+  - name: CPU_LIMIT
+    displayName: CPU upper limit
+    description: CPU upper limit
+    required: true
+  - name: MEMORY_REQUEST
+    displayName: Requested memory
+    description: Requested memory
+    required: true
+  - name: MEMORY_LIMIT
+    displayName: Memory upper limit
+    description: Memory upper limit
+    required: true
+  - name: DB_PVC_SIZE
+    value: 5G
+    displayName: PVC Size
+    description: PVC Size
+    required: true
+objects:
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: nmp-msa-postgresql
+      annotations:
+        template.openshift.io/expose-uri: postgres://{.spec.clusterIP}:{.spec.ports[?(.name=="postgresql")].port}
+      labels:
+        name: postgresql
+        app: nmp-msa
+        role: postgresql
+        env: ${ENV_NAME}
+    spec:
+      ports:
+        - name: postgresql
+          protocol: TCP
+          port: 5432
+          targetPort: 5432
+      selector:
+        name: nmp-msa-postgresql
+      type: ClusterIP
+      sessionAffinity: None
+    status:
+      loadBalancer: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: nmp-msa-postgresql
+      annotations:
+        volume.beta.kubernetes.io/storage-class: netapp-block-standard
+        template.openshift.io.bcgov/create: 'true'
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: "${DB_PVC_SIZE}"
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      annotations:
+        template.alpha.openshift.io/wait-for-ready: 'true'
+      name: nmp-msa-postgresql
+      labels:
+        name: nmp-msa-postgresql
+        app: nmp-msa-postgresql
+        role: postgresql
+        env: ${ENV_NAME}
+    spec:
+      replicas: 1
+      strategy:
+        type: Recreate
+      triggers:
+        - type: ConfigChange
+      test: false
+      selector:
+        name: nmp-msa-postgresql
+      template:
+        metadata:
+          creationTimestamp:
+          labels:
+            name: nmp-msa-postgresql
+        spec:
+          volumes:
+            - name: postgresql-data
+              persistentVolumeClaim:
+                claimName: nmp-msa-postgresql
+          containers:
+            - name: postgresql
+              image: 'crunchydata/crunchy-postgres-gis:centos7-12.4-3.0-4.4.1'
+              ports:
+                - containerPort: 5432
+                  protocol: TCP
+              env:
+                - name: PG_DATABASE
+                  value: msa
+                - name: PG_MODE
+                  value: primary
+                - name: PG_PRIMARY_PORT
+                  value: '5432'
+                - name: PGDATA_PATH_OVERRIDE
+                  value: persist
+                - name: PG_PRIMARY_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: nmp-msa-secrets
+                      key: DATABASE_REPLICATION_USER
+                - name: PG_ROOT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: nmp-msa-secrets
+                      key: DATABASE_ROOT_PASSWORD
+                - name: PG_PRIMARY_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: nmp-msa-secrets
+                      key: DATABASE_REPLICATION_PASSWORD
+                - name: PG_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: nmp-msa-secrets
+                      key: DATABASE_USER
+                - name: PG_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: nmp-msa-secrets
+                      key: DATABASE_PASSWORD
+              resources:
+                request:
+                  cpu: "${CPU_REQUEST}"
+                  memory: "${MEMORY_REQUEST}"
+                limits:
+                  cpu: "${CPU_LIMIT}"
+                  memory: "${MEMORY_LIMIT}"
+              volumeMounts:
+                - name: postgresql-data
+                  mountPath: "/pgdata"
+              readinessProbe:
+                tcpSocket:
+                  port: 5432
+                initialDelaySeconds: 25
+                timeoutSeconds: 1
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 3
+              imagePullPolicy: IfNotPresent
+              securityContext:
+                capabilities: {}
+                privileged: false
+          restartPolicy: Always
+          terminationGracePeriodSeconds: 30
+          dnsPolicy: ClusterFirst
+          securityContext: {}
+          schedulerName: default-scheduler
+    status: {}

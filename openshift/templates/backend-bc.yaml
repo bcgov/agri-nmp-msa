@@ -1,0 +1,57 @@
+---
+kind: Template
+apiVersion: v1
+labels:
+  template: nmp-msa-backend-bc-template
+metadata:
+  name: backend-bc
+  creationTimestamp:
+parameters:
+  - name: ENV_NAME
+    displayName: Environment Name
+    description: Environment Name
+    required: true
+objects:
+  - kind: ImageStream
+    apiVersion: image.openshift.io/v1
+    metadata:
+      annotations:
+        description: NMP MSA Backend Image Stream
+      name: nmp-msa-backend
+    spec:
+      lookupPolicy:
+        local: false
+  - kind: BuildConfig
+    apiVersion: build.openshift.io/v1
+    metadata:
+      annotations:
+        description: NMP MSA Backend builder
+      name: nmp-msa-backend
+    spec:
+      nodeSelector: null
+      output:
+        to:
+          kind: ImageStreamTag
+          name: nmp-msa-backend:latest
+      postCommit: { }
+      resources:
+        limits:
+          cpu: 2000m
+          memory: 2G
+        requests:
+          cpu: 500m
+          memory: 200M
+      runPolicy: SerialLatestOnly
+      source:
+        contextDir: backend
+        git:
+          uri: "https://github.com/plasticviking/agri-nmp-msa.git"
+        type: Git
+      strategy:
+        sourceStrategy:
+          from:
+            kind: DockerImage
+            name: fabric8/s2i-java:latest
+        type: Source
+    status:
+      lastVersion: 0
