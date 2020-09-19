@@ -11,6 +11,8 @@ parameters:
     displayName: Environment Name
     description: Environment Name
     required: true
+  - name: API_BASE
+    required: true
 objects:
   - kind: ImageStream
     apiVersion: image.openshift.io/v1
@@ -45,7 +47,7 @@ objects:
       source:
         contextDir: frontend
         git:
-          uri: "https://github.com/plasticviking/agri-nmp-msa.git"
+          uri: "https://github.com/bcgov/agri-nmp-msa.git"
         type: Git
       strategy:
         sourceStrategy:
@@ -53,7 +55,7 @@ objects:
             - name: NODE_ENV
               value: production
             - name: API_BASE
-              value: 'https://nmp-msa-dev-agri-nmp-dev.pathfinder.gov.bc.ca'
+              value: ${API_BASE}
             - name: GA_ENABLED
               value: 'true'
             - name: GA_PROPERTY
@@ -61,18 +63,21 @@ objects:
                 secretKeyRef:
                   name: nmp-msa-secrets
                   key: GOOGLE_ANALYTICS_PROPERTY
-            - name: KEYCLOAK_URL
-                configMapRef:
-                  name: nmp-msa-frontend-build-config
-                  key: KEYCLOAK_URL
-            - name: KEYCLOAK_CLIENT_ID
-                configMapRef:
-                  name: nmp-msa-frontend-build-config
-                  key: KEYCLOAK_CLIENT_ID
-             - name: KEYCLOAK_REALM
-                configMapRef:
-                  name: nmp-msa-frontend-build-config
+            - name: KEYCLOAK_REALM
+              valueFrom:
+                configMapKeyRef:
                   key: KEYCLOAK_REALM
+                  name: nmp-msa-frontend-build-config
+            - name: KEYCLOAK_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: KEYCLOAK_CLIENT_ID
+                  name: nmp-msa-frontend-build-config
+            - name: KEYCLOAK_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: KEYCLOAK_URL
+                  name: nmp-msa-frontend-build-config
           from:
             kind: ImageStreamTag
             name: 'nodejs:10'

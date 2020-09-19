@@ -6,12 +6,25 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.web.cors.CorsUtils;
 
 @Configuration
 @EnableWebSecurity
 @Profile("!dev")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+  private JwtAuthenticationConverter jwtAuthenticationConverter() {
+    JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
+        new JwtGrantedAuthoritiesConverter();
+    jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
+    jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+    JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+    jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+    return jwtAuthenticationConverter;
+  }
+
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -25,19 +38,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .requestMatchers(CorsUtils::isPreFlightRequest)
         .permitAll()
         .antMatchers(HttpMethod.GET, "/v1/admin/dashboard")
-        .hasRole("NMPAdmin")
+        .hasRole("ROLE_NMPAdmin")
         .antMatchers(HttpMethod.GET, "/v1/admin/stations")
-        .hasRole("NMPAdmin")
+        .hasRole("ROLE_NMPAdmin")
         .antMatchers(HttpMethod.GET, "/v1/admin/stations/**")
-        .hasRole("NMPAdmin")
+        .hasRole("ROLE_NMPAdmin")
         .antMatchers(HttpMethod.PUT, "/v1/admin/stations/**")
-        .hasRole("NMPAdmin")
+        .hasRole("ROLE_NMPAdmin")
         .antMatchers(HttpMethod.POST, "/v1/page")
-        .hasRole("NMPAdmin")
+        .hasRole("ROLE_NMPAdmin")
         .anyRequest()
         .permitAll()
         .and()
         .oauth2ResourceServer()
-        .jwt();
+        .jwt()
+        .jwtAuthenticationConverter(this.jwtAuthenticationConverter());
   }
 }

@@ -45,7 +45,7 @@ objects:
       source:
         contextDir: backend
         git:
-          uri: "https://github.com/plasticviking/agri-nmp-msa.git"
+          uri: "https://github.com/bcgov/agri-nmp-msa.git"
         type: Git
       strategy:
         sourceStrategy:

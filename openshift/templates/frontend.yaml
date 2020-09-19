@@ -72,7 +72,6 @@ objects:
             from:
               kind: ImageStreamTag
               name: 'nmp-msa-frontend:latest'
-              namespace: agri-nmp-dev
             type: imageChange
         - type: ConfigChange
       test: false
