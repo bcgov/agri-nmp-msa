@@ -26,7 +26,7 @@ class OWMForecast {
     Date forDate() {
       Calendar cal = Calendar.getInstance();
       cal.setTime(dt);
-      cal.add(Calendar.HOUR, -24);
+      cal.add(Calendar.HOUR, 24);
       return cal.getTime();
     }
 
