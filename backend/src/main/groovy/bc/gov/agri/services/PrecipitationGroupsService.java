@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -77,8 +78,7 @@ public class PrecipitationGroupsService {
 
     OWMForecast forecast = new OWMForecast();
 
-    template.query(
-        "select rain, snow, valid_for from forecast where precipgrp = ? and "
+    template.query("select rain, snow, valid_for from forecast where precipgrp = ? and "
             + "valid_for >= date(timezone('America/Vancouver', now())) order by valid_for asc",
         new Integer[]{Integer.parseInt(stationId)},
         row -> {
@@ -92,6 +92,7 @@ public class PrecipitationGroupsService {
     return forecast;
   }
 
+  @CacheEvict(allEntries = true, cacheNames = "geojson")
   public void storeForecast(String stationId, OWMForecast forecast) {
     template.update("delete from forecast where precipgrp = ?", Integer.parseInt(stationId));
     List<OWMForecast.Statistics> statistics = forecast.getStatistics();
