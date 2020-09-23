@@ -78,7 +78,8 @@ public class PrecipitationGroupsService {
     OWMForecast forecast = new OWMForecast();
 
     template.query(
-        "select rain, snow, valid_for from forecast where precipgrp = ? order by valid_for asc",
+        "select rain, snow, valid_for from forecast where precipgrp = ? and "
+            + "valid_for >= date(timezone('America/Vancouver', now())) order by valid_for asc",
         new Integer[]{Integer.parseInt(stationId)},
         row -> {
           OWMForecast.Forecast fc = new OWMForecast.Forecast();

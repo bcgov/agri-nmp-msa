@@ -41,9 +41,9 @@ public class UpdateForecastsService {
     }).build();
   }
 
-  @Scheduled(cron = "0 3 * * * ?", zone = "America/Vancouver")
+  @Scheduled(cron = "0 3,33 * * * ?", zone = "America/Vancouver")
   public void updateForecasts() {
-    Duration FRESHNESS = Duration.ofHours(6);
+    Duration FRESHNESS = Duration.ofHours(2);
 
     RunLog rl = new RunLog();
     rl.setRunStart(new Date());

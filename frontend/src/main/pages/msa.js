@@ -22,7 +22,7 @@ const Msa = () => {
   }, []);
 
   const getStyle = (feature) => {
-    const firstDay = feature.properties.forecasts.statistics[0].runoffRisk;
+    const firstDay = feature?.properties?.forecasts?.statistics[0]?.runoffRisk;
 
     let style = {
       weight: 1,
@@ -124,20 +124,23 @@ const Msa = () => {
                   <tbody>
                   {[0, 1, 2, 3, 4].map((v) => {
                     const s = selectedFeature.properties.forecasts.statistics[v];
-                    const formatted24 = formatNumeric(s.next24);
-                    const formatted72 = formatNumeric(s.next72);
+                    if (!!s) {
+                      const formatted24 = formatNumeric(s.next24 ? s.next24 : 0);
+                      const formatted72 = formatNumeric(s.next72 ? s.next72 : 0);
 
-                    return (
-                      <tr key={`forecast-${v}`}>
-                        <td>{formatDate(new Date(s.associatedForecast.dt))}</td>
-                        <td>{formatNumeric(s.next24)}</td>
-                        <td>{formatNumeric(s.next72)}</td>
-                        <td className={`risk-${s.runoffRisk}`}>
-                          {riskMap[s.runoffRisk]}
-                        </td>
-                        <td>{renderLinkTD(v, formatted24, formatted72)}</td>
-                      </tr>
-                    );
+                      return (
+                        <tr key={`forecast-${v}`}>
+                          <td>{formatDate(new Date(s.associatedForecast.forDate))}</td>
+                          <td>{formatNumeric(s.next24 ? s.next24 : 0)}</td>
+                          <td>{formatNumeric(s.next72 ? s.next72 : 0)}</td>
+                          <td className={`risk-${s.runoffRisk}`}>
+                            {riskMap[s.runoffRisk]}
+                          </td>
+                          <td>{renderLinkTD(v, formatted24, formatted72)}</td>
+                        </tr>
+                      );
+                    }
+                    return null;
                   })}
                   </tbody>
                 </table>

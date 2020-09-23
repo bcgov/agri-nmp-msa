@@ -15,22 +15,21 @@ class OWMForecast {
 
   static class Forecast {
 
-    @JsonIgnore
+    @JsonDeserialize(using = DateDeserializer.class)
     Date dt;
 
     Double rain = 0;
     Double snow = 0;
 
-    @JsonProperty("dt")
-    @JsonDeserialize(using = DateDeserializer.class)
+    @JsonProperty("forDate")
     Date forDate() {
       Calendar cal = Calendar.getInstance();
       cal.setTime(dt);
-      cal.add(Calendar.HOUR, 24);
+      cal.add(Calendar.HOUR, -24);
       return cal.getTime();
     }
 
-    double total_precip() {
+    double totalPrecip() {
       return rain + snow;
     }
 
@@ -50,16 +49,17 @@ class OWMForecast {
       return list.stream().map(e -> {
         Statistics s = new Statistics();
         s.associatedForecast = e;
-        s.next24 = e.total_precip();
-        s.next72 = e.total_precip();
+        s.next24 = e.totalPrecip();
+        s.next72 = e.totalPrecip();
+
+        Instant currentDay = e.dt.toInstant();
 
         for (int i = 1; i <= 2; i++) {
-          Instant currentDay = e.dt.toInstant();
-          Instant nextDay = e.dt.toInstant().plus(Duration.ofDays(1 * i));
+          Instant nextDay = currentDay.plus(Duration.ofDays(1 * i));
           Forecast nextForecast = list.find(f -> f.dt.toInstant().equals(nextDay));
 
           if (nextForecast != null && s.next72 != null) {
-            s.next72 += nextForecast.total_precip();
+            s.next72 += nextForecast.totalPrecip();
           } else {
             s.next72 = null;
           }
