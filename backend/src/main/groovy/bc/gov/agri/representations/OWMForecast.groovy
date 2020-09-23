@@ -1,6 +1,7 @@
 package bc.gov.agri.representations
 
 import bc.gov.agri.utilities.DateDeserializer
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import org.apache.commons.lang3.builder.ToStringBuilder
@@ -14,11 +15,20 @@ class OWMForecast {
 
   static class Forecast {
 
-    @JsonDeserialize(using = DateDeserializer.class)
+    @JsonIgnore
     Date dt;
 
     Double rain = 0;
     Double snow = 0;
+
+    @JsonProperty("dt")
+    @JsonDeserialize(using = DateDeserializer.class)
+    Date forDate() {
+      Calendar cal = Calendar.getInstance();
+      cal.setTime(dt);
+      cal.add(Calendar.HOUR, -24);
+      return cal.getTime();
+    }
 
     double total_precip() {
       return rain + snow;
