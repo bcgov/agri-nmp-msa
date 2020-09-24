@@ -1,14 +1,19 @@
 package bc.gov.agri.services;
 
+import bc.gov.agri.representations.HashedResult;
 import bc.gov.agri.representations.OWMForecast;
 import bc.gov.agri.representations.WeatherStation;
 import bc.gov.agri.representations.geojson.FeatureCollection;
 import java.math.BigDecimal;
+import java.security.MessageDigest;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -86,7 +91,7 @@ public class PrecipitationGroupsService {
           forecast.getList().add(fc);
           fc.setRain(row.getDouble(1));
           fc.setSnow(row.getDouble(2));
-          fc.setDt(new java.util.Date((row.getDate(3).getTime())));
+          fc.setDt(row.getDate(3).toLocalDate());
         });
 
     return forecast;
@@ -106,7 +111,7 @@ public class PrecipitationGroupsService {
           Integer.parseInt(stationId),
           d.getRain(),
           d.getSnow(),
-          d.getDt(),
+          Date.valueOf(d.getDt()),
           s1.map(OWMForecast.Statistics::getNext24).orElse(null),
           s1.map(OWMForecast.Statistics::getNext72).orElse(null),
           s1.map(s -> s.computedRiskRating().getValue()).orElse(null));
@@ -115,9 +120,10 @@ public class PrecipitationGroupsService {
 
 
   @Cacheable(cacheNames = "geojson")
-  public FeatureCollection getGeoJSON() {
-
+  public HashedResult<FeatureCollection> getGeoJSON() {
     FeatureCollection fc = new FeatureCollection();
+
+    MessageDigest md = DigestUtils.getSha1Digest();
 
     String Q =
         "SELECT pg.precipgrp as id, ST_AsGEOJSON(pg.geom)::json AS geometry, sp.longitude, sp"
@@ -139,13 +145,27 @@ public class PrecipitationGroupsService {
       f.setGeometry(geometry);
       f.getProperties().put("weatherStation", ws);
       f.getProperties().put("precipgrp", id);
-      f.getProperties().put("forecasts", this.retrieveForecasts(id));
+      OWMForecast forecasts = this.retrieveForecasts(id);
+      f.getProperties().put("forecasts", forecasts);
       f.getProperties().put("link", link);
 
       fc.getFeatures().add(f);
+
+      DigestUtils.updateDigest(md, id);
+      DigestUtils.updateDigest(md, Optional.ofNullable(link).orElse("none"));
+      forecasts.getList().stream().forEach(forecast -> {
+        DigestUtils.updateDigest(md, String.valueOf(forecast.getDt().getDayOfMonth()));
+        DigestUtils.updateDigest(md, String.valueOf(forecast.getSnow()));
+        DigestUtils.updateDigest(md, String.valueOf(forecast.getRain()));
+      });
     });
 
-    return fc;
+    HashedResult<FeatureCollection> result = new HashedResult<>();
+
+    result.setResult(fc);
+    result.setHash(Hex.encodeHexString(md.digest()));
+
+    return result;
   }
 
 }

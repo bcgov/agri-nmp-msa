@@ -1,9 +1,9 @@
 package bc.gov.agri.endpoints;
 
+import bc.gov.agri.representations.HashedResult;
 import bc.gov.agri.representations.geojson.FeatureCollection;
 import bc.gov.agri.services.PrecipitationGroupsService;
-import java.util.concurrent.TimeUnit;
-import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +24,13 @@ public class PrecipitationGroups {
 
   @RequestMapping(value = "/geojson", method = RequestMethod.GET)
   public ResponseEntity<FeatureCollection> geojson(WebRequest request) {
-    //@todo check modification time
 
-    final FeatureCollection geoJSON = service.getGeoJSON();
-    return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS)).body(geoJSON);
+    final HashedResult<FeatureCollection> result = service.getGeoJSON();
+
+    if (request.checkNotModified(result.getHash())) {
+      return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+    }
+
+    return ResponseEntity.ok().eTag(result.getHash()).body(result.getResult());
   }
 }

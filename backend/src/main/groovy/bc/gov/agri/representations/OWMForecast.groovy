@@ -1,13 +1,11 @@
 package bc.gov.agri.representations
 
-import bc.gov.agri.utilities.DateDeserializer
-import com.fasterxml.jackson.annotation.JsonIgnore
+import bc.gov.agri.utilities.LocalDateDeserializer
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import org.apache.commons.lang3.builder.ToStringBuilder
 
-import java.time.Duration
-import java.time.Instant
+import java.time.LocalDate
 import java.util.stream.Collectors
 
 class OWMForecast {
@@ -15,18 +13,15 @@ class OWMForecast {
 
   static class Forecast {
 
-    @JsonDeserialize(using = DateDeserializer.class)
-    Date dt;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    LocalDate dt;
 
     Double rain = 0;
     Double snow = 0;
 
     @JsonProperty("forDate")
-    Date forDate() {
-      Calendar cal = Calendar.getInstance();
-      cal.setTime(dt);
-      cal.add(Calendar.HOUR, -24);
-      return cal.getTime();
+    LocalDate forDate() {
+      return dt;
     }
 
     double totalPrecip() {
@@ -52,11 +47,11 @@ class OWMForecast {
         s.next24 = e.totalPrecip();
         s.next72 = e.totalPrecip();
 
-        Instant currentDay = e.dt.toInstant();
+        LocalDate currentDay = e.dt;
 
         for (int i = 1; i <= 2; i++) {
-          Instant nextDay = currentDay.plus(Duration.ofDays(1 * i));
-          Forecast nextForecast = list.find(f -> f.dt.toInstant().equals(nextDay));
+          LocalDate nextDay = currentDay.plusDays(1 * i);
+          Forecast nextForecast = list.find(f -> f.dt.equals(nextDay));
 
           if (nextForecast != null && s.next72 != null) {
             s.next72 += nextForecast.totalPrecip();
