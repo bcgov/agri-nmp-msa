@@ -36,7 +36,7 @@ public class Page {
     }
     return ResponseEntity
         .ok()
-        .cacheControl(CacheControl.maxAge(12, TimeUnit.HOURS).mustRevalidate())
+        .cacheControl(CacheControl.noCache().mustRevalidate())
         .body(result.getResult());
   }
 

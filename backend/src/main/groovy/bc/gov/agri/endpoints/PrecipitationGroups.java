@@ -35,7 +35,7 @@ public class PrecipitationGroups {
 
     return ResponseEntity
         .ok()
-        .cacheControl(CacheControl.maxAge(Duration.ofHours(2)).mustRevalidate())
+        .cacheControl(CacheControl.noCache().mustRevalidate())
         .eTag(result.getHash())
         .body(result.getResult());
   }
