@@ -3,6 +3,8 @@ package bc.gov.agri.endpoints;
 import bc.gov.agri.representations.HashedResult;
 import bc.gov.agri.representations.geojson.FeatureCollection;
 import bc.gov.agri.services.PrecipitationGroupsService;
+import java.time.Duration;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,6 +33,10 @@ public class PrecipitationGroups {
       return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
-    return ResponseEntity.ok().eTag(result.getHash()).body(result.getResult());
+    return ResponseEntity
+        .ok()
+        .cacheControl(CacheControl.maxAge(Duration.ofHours(2)).mustRevalidate())
+        .eTag(result.getHash())
+        .body(result.getResult());
   }
 }

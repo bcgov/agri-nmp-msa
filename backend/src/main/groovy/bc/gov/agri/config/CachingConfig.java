@@ -18,8 +18,9 @@ public class CachingConfig {
   public CacheManager cacheManager() {
     SimpleCacheManager cacheManager = new SimpleCacheManager();
     cacheManager.setCaches(Arrays.asList(new CaffeineCache("geojson",
-        Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.HOURS).maximumSize(100).build())));
-
+            Caffeine.newBuilder().expireAfterWrite(6, TimeUnit.HOURS).maximumSize(5).build()),
+        new CaffeineCache("settings",
+            Caffeine.newBuilder().expireAfterWrite(24, TimeUnit.HOURS).maximumSize(5).build())));
     return cacheManager;
   }
 }

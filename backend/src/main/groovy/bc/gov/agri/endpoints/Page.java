@@ -1,5 +1,6 @@
 package bc.gov.agri.endpoints;
 
+import bc.gov.agri.representations.HashedResult;
 import bc.gov.agri.representations.PageCustomization;
 import bc.gov.agri.services.PageCustomizationService;
 import java.util.concurrent.TimeUnit;
@@ -27,11 +28,16 @@ public class Page {
 
   @RequestMapping(value = {"/", ""}, method = RequestMethod.GET)
   public ResponseEntity<PageCustomization> pageCustomization(WebRequest request) {
-    //@todo check modification time
+
+    final HashedResult<PageCustomization> result = service.getPageCustomization();
+
+    if (request.checkNotModified(result.getHash())) {
+      return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+    }
     return ResponseEntity
         .ok()
-        .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS))
-        .body(service.getPageCustomization());
+        .cacheControl(CacheControl.maxAge(12, TimeUnit.HOURS).mustRevalidate())
+        .body(result.getResult());
   }
 
   @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
