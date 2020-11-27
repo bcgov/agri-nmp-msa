@@ -17,14 +17,13 @@ class OWMForecast {
   static class Forecast {
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
     LocalDate dt;
 
     Double rain = 0;
     Double snow = 0;
 
     @JsonProperty("forDate")
-    @JsonSerialize(using = DateSerializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     LocalDate forDate() {
       return dt;
     }
