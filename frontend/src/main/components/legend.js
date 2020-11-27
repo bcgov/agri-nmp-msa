@@ -28,7 +28,7 @@ class Legend extends MapControl {
     ];
 
     const content = ([
-        <h4>Runoff Risk</h4>,
+        <h4>Rainfall amount</h4>,
         <ul>
           {riskValues.map((rv) => (
             <li key={rv.className} className={rv.className}>
@@ -50,7 +50,7 @@ class Legend extends MapControl {
       }
     }
 
-    return new LL({ position: 'bottomleft' }, _props.leafletElement);
+    return new LL({ position: 'bottomright' }, _props.leafletElement);
   }
 }
 

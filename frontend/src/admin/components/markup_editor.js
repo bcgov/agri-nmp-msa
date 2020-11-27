@@ -12,8 +12,8 @@ const MarkupEditor = (props) => {
         init={{
           height: 400,
           menubar: false,
-          plugins: 'autolink link preview hr insertdatetime table paste',
-          toolbar: 'undo redo  | bold italic underline | removeformat |s bullist numlist',
+          plugins: 'autolink link preview hr insertdatetime table paste lists',
+          toolbar: 'undo redo | styleselect |  bold italic underline | forecolor backcolor | removeformat | bullist numlist',
         }}
       />
     </div>

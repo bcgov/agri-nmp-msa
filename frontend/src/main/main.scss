@@ -95,3 +95,24 @@ div.legend {
     }
   }
 }
+
+div.tileLayerSelector {
+  background: white;
+  padding: 0.5rem;
+
+  h4 {
+    padding: 0;
+    margin: 0 0 0.125rem;
+    text-align: center;
+  }
+}
+
+a.worksheetLink {
+  display: block;
+  background: $linkBackground;
+  color: white;
+  padding: 1rem 0.4rem;
+  height: 100%;
+  margin: 2px 1px;
+
+}

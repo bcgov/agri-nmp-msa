@@ -54,7 +54,7 @@ const config = {
       loader: 'babel-loader',
       exclude: [nodeModulesPath],
       query: {
-        presets: ['@babel/preset-react', '@babel/preset-env'],
+        presets: ['@babel/preset-react', ['@babel/preset-env', { targets: 'last 2 versions, >3%, ie 11' }]],
         plugins: ['@babel/plugin-proposal-object-rest-spread'],
       },
     }, {
