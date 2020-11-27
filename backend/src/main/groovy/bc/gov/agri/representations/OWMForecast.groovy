@@ -1,8 +1,11 @@
 package bc.gov.agri.representations
 
+import bc.gov.agri.utilities.DateSerializer
 import bc.gov.agri.utilities.LocalDateDeserializer
+import bc.gov.agri.utilities.LocalDateSerializer
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.apache.commons.lang3.builder.ToStringBuilder
 
 import java.time.LocalDate
@@ -14,12 +17,14 @@ class OWMForecast {
   static class Forecast {
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     LocalDate dt;
 
     Double rain = 0;
     Double snow = 0;
 
     @JsonProperty("forDate")
+    @JsonSerialize(using = DateSerializer.class)
     LocalDate forDate() {
       return dt;
     }
