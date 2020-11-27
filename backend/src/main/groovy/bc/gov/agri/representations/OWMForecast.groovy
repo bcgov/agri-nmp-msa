@@ -80,19 +80,6 @@ class OWMForecast {
       return ToStringBuilder.reflectionToString(this);
     }
 
-    static enum RiskRating implements Comparable<RiskRating> {
-      LOW(1),
-      MEDIUM(2),
-      MEDIUM_HIGH(3),
-      HIGH(4);
-
-      final int value;
-
-      RiskRating(int value) {
-        this.value = value;
-      }
-    }
-
     @JsonProperty("runoffRisk")
     RiskRating computedRiskRating() {
       RiskRating risk24 = RiskRating.LOW, risk72 = RiskRating.LOW;

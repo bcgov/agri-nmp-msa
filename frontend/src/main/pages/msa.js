@@ -1,4 +1,5 @@
 import axios from 'axios';
+import moment from 'moment';
 import React, { useContext, useEffect, useState } from 'react';
 import { GeoJSON, Map, Popup, TileLayer, } from 'react-leaflet';
 import styles from '../../shared/colors.scss';
@@ -83,7 +84,7 @@ const Msa = () => {
     });
   }
 
-  const formatDate = (v) => (v.toLocaleDateString());
+  const formatDate = (v) => (v.format('l'));
   const formatNumeric = (v) => (Math.round(v));
 
   const riskMap = {};
@@ -121,7 +122,7 @@ const Msa = () => {
                     if (!!s) {
                       return (
                         <tr key={`forecast-${v}`}>
-                          <td>{formatDate(new Date(s.associatedForecast.forDate))}</td>
+                          <td>{formatDate(moment(s.associatedForecast.forDate))}</td>
                           <td>{formatNumeric(s.next24 ? s.next24 : 0)}</td>
                           <td>{formatNumeric(s.next72 ? s.next72 : 0)}</td>
                           <td className={`risk-${s.runoffRisk}`}>
@@ -162,8 +163,6 @@ const Msa = () => {
             attribution={tileLayer.attribution}
             url={tileLayer.url}
           />
-
-          {/*<TileLayerSelector selected={tileLayer} tileLayers={tileLayers} changeSelectedTileLayer={setTileLayer} />*/}
 
           <Legend />
 

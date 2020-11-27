@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,13 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-/*
-alter table forecast alter column rain type numeric(7,3);
-alter table forecast alter column snow type numeric(7,3);
-alter table forecast alter column next24 type numeric(7,3);
-alter table forecast alter column next72 type numeric(7,3);
-*/
-
 @Service
 @Transactional
 public class PrecipitationGroupsService {
@@ -38,8 +32,7 @@ public class PrecipitationGroupsService {
   public List<WeatherStation> getWeatherStations() {
     List<WeatherStation> stations = new LinkedList<>();
 
-    template.query(
-        "select sp.precipgrp, sp.longitude, sp.latitude, sp.userlink from station_points sp order"
+    template.query("select sp.precipgrp, sp.longitude, sp.latitude, sp.userlink from station_points sp order"
             + " by sp.precipgrp asc",
         row -> {
           String station = row.getString(1);
@@ -99,16 +92,18 @@ public class PrecipitationGroupsService {
 
   @CacheEvict(allEntries = true, cacheNames = "geojson")
   public void storeForecast(String stationId, OWMForecast forecast) {
-    template.update("delete from forecast where precipgrp = ?", Integer.parseInt(stationId));
+    Integer stationIdInteger = Integer.parseInt(stationId);
+
+    template.update("delete from forecast where precipgrp = ?", stationIdInteger);
     List<OWMForecast.Statistics> statistics = forecast.getStatistics();
 
     forecast.getList().forEach(d -> {
-      Optional<OWMForecast.Statistics> s1 =
-          statistics.stream().filter(s -> s.getAssociatedForecast() == d).findFirst();
+      Optional<OWMForecast.Statistics> s1 = statistics.stream().filter(s ->
+          s.getAssociatedForecast() == d).findFirst();
       template.update(
           "insert into forecast (precipgrp, rain, snow, valid_for, retrieved_at, next24, next72, "
               + "risk) values (?, ?, ?, ?, now(), ?, ?, ?)",
-          Integer.parseInt(stationId),
+          stationIdInteger,
           d.getRain(),
           d.getSnow(),
           Date.valueOf(d.getDt()),
@@ -116,6 +111,34 @@ public class PrecipitationGroupsService {
           s1.map(OWMForecast.Statistics::getNext72).orElse(null),
           s1.map(s -> s.computedRiskRating().getValue()).orElse(null));
     });
+
+    // update the archive using today's forecast (future days will be updated in future...)
+    template.query(
+        "select precipgrp, valid_for as for_date, next24, next72, risk from forecast where precipgrp = ? order by valid_for asc limit 1;",
+        row -> {
+          java.sql.Date forDate = row.getDate(2);
+          BigDecimal next24 = row.getBigDecimal(3);
+          BigDecimal next72 = row.getBigDecimal(4);
+          Integer risk = row.getInt(5);
+
+          if (row.wasNull()) {
+            risk = null;
+          }
+
+          template.update("insert into archived_forecasts(precipgrp, for_date, next24, next72, archived_at, risk)"
+                  + " values (?, ?, ?, ?, now(), ?) on conflict on constraint "
+                  + "unique_for_date do update set archived_at=now(), risk=?, next24=?, next72=?;",
+
+              stationIdInteger,
+              forDate,
+              next24,
+              next72,
+              risk,
+              risk,
+              next24,
+              next72);
+        },
+        stationIdInteger);
   }
 
 

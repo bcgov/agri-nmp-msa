@@ -1,8 +1,9 @@
+import moment from 'moment';
 import React from 'react';
 
 const RunlogTable = (props) => {
   const { runlogs } = props;
-  const formatTimestamp = (v) => (v.toLocaleString());
+  const formatTimestamp = (v) => (v.format('l HH:mm z'));
 
   return (
     <table id={'runlogs'}>
@@ -20,8 +21,8 @@ const RunlogTable = (props) => {
       {runlogs.map((rl) => (
         <tr key={rl.id}>
           <td>{rl.id}</td>
-          <td>{formatTimestamp(new Date(rl.runStart))}</td>
-          <td>{formatTimestamp(new Date(rl.runFinish))}</td>
+          <td>{formatTimestamp(moment(rl.runStart))}</td>
+          <td>{formatTimestamp(moment(rl.runFinish))}</td>
           <td>{rl.groupsUpdated}</td>
           <td>{rl.errorCount}</td>
           <td className={'remarks'}>
