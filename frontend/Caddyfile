@@ -25,7 +25,7 @@ templates /app_config* {
 	mime application/javascript
 }
 
-templates /generated_index.html {
+templates {
 	mime text/html
 }
 
