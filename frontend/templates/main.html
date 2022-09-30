@@ -6,12 +6,12 @@
 
     <% if (googleAnalyticsEnabled) { %>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=<%= googleAnalyticsProperty %>"></script>
+    <script async src='https://www.googletagmanager.com/gtag/js?id={{env "GA_PROPERTY"}}'></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', '<%= googleAnalyticsProperty %>');
+      gtag('config', '{{env "GA_PROPERTY"}}');
     </script>
     <% } %>
 

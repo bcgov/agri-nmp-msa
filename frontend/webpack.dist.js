@@ -111,7 +111,6 @@ const config = {
       filename: 'generated_index.html',
       templateParameters: {
         googleAnalyticsEnabled: 'GA_ENABLED' in process.env ? JSON.parse(process.env.GA_ENABLED) : false,
-        googleAnalyticsProperty: 'GA_PROPERTY' in process.env ? process.env.GA_PROPERTY : 'unset',
       },
       template: path.resolve(__dirname, 'templates/main.html'),
     }),

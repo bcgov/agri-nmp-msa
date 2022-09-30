@@ -25,6 +25,10 @@ templates /app_config* {
 	mime application/javascript
 }
 
+templates /generated_index.html {
+	mime text/html
+}
+
 header /generated_index.html {
 	Cache-Control max-age=0,no-cache,no-store,must-revalidate
 }
