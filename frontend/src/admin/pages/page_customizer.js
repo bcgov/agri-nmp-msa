@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import Loading from '../../shared/components/loading';
-import CONFIG from '../../shared/config';
 import { KeycloakContext } from '../auth';
 import MarkupEditor from '../components/markup_editor';
+import {ConfigContext} from "../context";
 
 const PageCustomization = () => {
   const [statusText, setStatusText] = useState('');
@@ -12,6 +12,7 @@ const PageCustomization = () => {
   const [saving, setSaving] = useState(false);
   const [state, setState] = useState({});
   const keycloak = useContext(KeycloakContext);
+  const CONFIG = useContext(ConfigContext);
 
   useEffect(() => {
 

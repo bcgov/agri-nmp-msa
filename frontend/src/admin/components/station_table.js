@@ -1,11 +1,12 @@
 import axios from 'axios';
 import fileDownload from 'js-file-download';
 import React, { useContext, useState } from 'react';
-import CONFIG from '../../shared/config';
 import { KeycloakContext } from '../auth';
+import {ConfigContext} from "../context";
 
 const StationTable = (props) => {
   const { stations, updateStation } = props;
+  const CONFIG = useContext(ConfigContext);
 
   const [editing, setEditing] = useState(null);
   const [dirtyValue, setDirtyValue] = useState(null);

@@ -1,14 +1,15 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import Loading from '../../shared/components/loading';
-import CONFIG from '../../shared/config';
 import { KeycloakContext } from '../auth';
 import StationTable from '../components/station_table';
+import {ConfigContext} from "../context";
 
 const Stations = () => {
   const [stations, setStations] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const keycloak = useContext(KeycloakContext);
+  const CONFIG = useContext(ConfigContext);
 
   useEffect(() => {
     keycloak.updateToken(30).then(() => {

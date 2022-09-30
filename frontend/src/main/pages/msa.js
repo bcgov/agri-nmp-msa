@@ -4,9 +4,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { GeoJSON, Map, Popup, TileLayer, } from 'react-leaflet';
 import styles from '../../shared/colors.scss';
 import Loading from '../../shared/components/loading';
-import CONFIG from '../../shared/config';
 import Legend from '../components/legend';
 import { PageCustomizationContext } from '../page';
+import {ConfigContext} from "../context";
 
 const tileLayers = [
   {
@@ -21,6 +21,7 @@ const Msa = () => {
   const [loaded, setLoaded] = useState(false);
   const [selectedFeature, setSelectedFeature] = useState(null);
   const pageCustomization = useContext(PageCustomizationContext);
+  const CONFIG = useContext(ConfigContext);
 
   useEffect(() => {
     axios.get(`${CONFIG.API_BASE}/v1/groups/geojson`).then((response) => {

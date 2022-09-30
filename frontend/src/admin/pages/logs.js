@@ -1,15 +1,16 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import Loading from '../../shared/components/loading';
-import CONFIG from '../../shared/config';
 import { KeycloakContext } from '../auth';
 import RunlogTable from '../components/run_log';
+import {ConfigContext} from "../context";
 
 const RunLogs = () => {
 
   const [report, setReport] = useState({});
   const [loaded, setLoaded] = useState(false);
   const keycloak = useContext(KeycloakContext);
+  const CONFIG = useContext(ConfigContext);
 
   useEffect(() => {
     keycloak.updateToken(30).then(() => {

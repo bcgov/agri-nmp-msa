@@ -3,5 +3,13 @@ import ReactDOM from 'react-dom';
 
 import './admin.scss';
 import Router from './router';
+import { ConfigContext } from './context';
 
-ReactDOM.render(<Router />, document.getElementById('root'));
+import(/* webpackChunkName: "app_config" */ '../shared/config').then(({ CONFIG }) => {
+  ReactDOM.render(
+    <ConfigContext.Provider value={CONFIG}>
+      <Router CONFIG={CONFIG} />
+    </ConfigContext.Provider>,
+    document.getElementById('root'),
+  );
+});
