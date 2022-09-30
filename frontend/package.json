@@ -69,7 +69,6 @@
     "dist": "webpack --production --config webpack.dist.js",
     "build": "webpack --production --config webpack.dist.js",
     "test": "jest --coverage",
-    "lint": "eslint src",
-    "serve": "node serve"
+    "lint": "eslint src"
   }
 }
