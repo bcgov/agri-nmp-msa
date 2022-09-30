@@ -7,7 +7,7 @@ root * /srv
 file_server
 
 log {
-	level DEBUG
+	level WARN
 }
 encode gzip
 
