@@ -1,5 +1,5 @@
 {
-    auto_https off
+	auto_https off
 }
 :5001
 
@@ -7,20 +7,28 @@ root * /srv
 file_server
 
 log {
-  level WARN
+	level DEBUG
 }
 encode gzip
 
-try_files {path} /index.html
+redir /admin /admin/
 
-templates /app_config* {
-  mime application/javascript
+handle_path /admin/ {
+	try_files {path} /admin.html
+}
+handle {
+    try_files {path} /generated_index.html
 }
 
-header /index.html {
-  Cache-Control max-age=0,no-cache,no-store,must-revalidate
+
+templates /app_config* {
+	mime application/javascript
+}
+
+header /generated_index.html {
+	Cache-Control max-age=0,no-cache,no-store,must-revalidate
 }
 
 header /admin.html {
-  Cache-Control max-age=0,no-cache,no-store,must-revalidate
+	Cache-Control max-age=0,no-cache,no-store,must-revalidate
 }
