@@ -1,0 +1,5 @@
+FROM openjdk:11-jdk-slim-bullseye
+RUN mkdir /app
+WORKDIR /app
+ADD . .
+CMD ./gradlew bootRun

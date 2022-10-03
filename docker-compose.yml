@@ -1,0 +1,52 @@
+version: '2'
+
+services:
+  backend:
+    container_name: nmp-msa-backend
+    restart: always
+    build:
+      context: backend
+      dockerfile: Dockerfile-local
+    environment:
+      GOV_BC_AGRI_DB_URL: jdbc:postgresql://db/nmp-msa
+      GOV_BC_AGRI_DB_USER: ${DATABASE_USER}
+      GOV_BC_AGRI_DB_PASSWORD: ${DATABASE_PASSWORD}
+      GOV_BC_AGRI_OWM_APIKEY: ${OWM_APIKEY}
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: ${JWT_ISSUER}
+    env_file:
+      - .env 
+    ports:
+      - '8080:8080'
+
+  frontend:
+    container_name: frontend
+    build:
+      context: frontend
+      dockerfile: Dockerfile-local
+    environment:
+      API_BASE: http://localhost:8080
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
+    ports:
+      - '5001:5001'
+
+  db:
+    image: postgis/postgis:13-3.3-alpine
+    container_name: nmp-msa-postgres
+    restart: always
+    volumes:
+      - 'pgdata:/var/lib/postgresql/data'
+      - './docker/dbinit:/docker-entrypoint-initdb.d'
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_DB: nmp-msa
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    command: postgres -c shared_buffers=256MB -c work_mem=32MB -c effective_cache_size=1GB
+    ports:
+      - '5432:5432'
+    env_file:
+      - .env
+
+volumes:
+  pgdata:

@@ -15,3 +15,9 @@ _Frontend_ is launched with `npm install && npm run start`. It will retrieve dat
 ```
 API_BASE="URL_HERE"
 ```
+
+# Docker Environment
+
+Setup your .env file based on the sample (an external Keycloak server and OpenWeatherMap API key are required).
+
+Run `docker-compose up`. After a few minutes, the application will be available at `http://localhost:5001` with the admin console at `http://localhost:5001/admin`.
