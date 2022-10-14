@@ -1,5 +1,9 @@
 # BC NMP Manure Spreading Advisory Tool
 
+## Local setup
+
+### Running each component separately
+
 _Backend_ is a Spring boot app launched with `gradle bootRun`. It requires 5 environment variables to be set appropriately:
 
 ```
@@ -16,8 +20,10 @@ _Frontend_ is launched with `npm install && npm run start`. It will retrieve dat
 API_BASE="URL_HERE"
 ```
 
-# Docker Environment
+### Docker
 
-Setup your .env file based on the sample (an external Keycloak server and OpenWeatherMap API key are required).
+Docker can also be used to run NMP-MSA locally.
 
-Run `docker-compose up`. After a few minutes, the application will be available at `http://localhost:5001` with the admin console at `http://localhost:5001/admin`.
+Set the environment variables by creating a copy of `.env.sample` and renaming it to `.env`, modifying values as appropriate (an external Keycloak server and OpenWeatherMap API key are required).
+
+Run `docker-compose up`. After a few minutes, the application will be available at http://localhost:5001 with the admin console at http://localhost:5001/admin.
