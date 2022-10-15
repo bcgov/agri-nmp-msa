@@ -27,3 +27,13 @@ Docker can also be used to run NMP-MSA locally.
 Set the environment variables by creating a copy of `.env.sample` and renaming it to `.env`, modifying values as appropriate (an external Keycloak server and OpenWeatherMap API key are required).
 
 Run `docker-compose up`. After a few minutes, the application will be available at http://localhost:5001 with the admin console at http://localhost:5001/admin.
+
+## CI/CD pipeline
+
+As all three NMP projects share the same namespace on OpenShift, they share a similar deployment process.
+
+Image builds are automatically triggered via GitHub webooks, whenever there is a push or PR merge to the main branch. A Tekton pipeline then performs image promotion, auto-deploying the build to DEV. 
+
+Deploying to TEST and PROD are done by manually starting the `promote-test-nmp-msa` and `promote-prod-nmp-msa` pipelines respectively. This can be done in the OpenShift web conosle, under **Pipelines** > **Pipelines** in the tools namespace, and clicking "Start" for the respective pipeline.
+
+To rollback PROD to the previous build, run the `undo-last-promote-prod-nmp-msa` pipeline.
