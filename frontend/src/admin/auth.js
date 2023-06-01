@@ -12,9 +12,14 @@ const AuthRequired = (props) => {
 
   const [keycloakInstance] = useState(Keycloak(
     {
-      clientId: CONFIG.KEYCLOAK_CLIENT_ID,
-      realm: CONFIG.KEYCLOAK_REALM,
       url: CONFIG.KEYCLOAK_URL,
+      realm: CONFIG.KEYCLOAK_REALM,
+      sslRequired: "external",
+      resource: CONFIG.KEYCLOAK_CLIENT_ID,
+      publicClient: true,
+      confidentialPort: 0,
+      realmPublicKey: CONFIG.KEYCLOAK_PUBLIC_KEY,
+      clientId: CONFIG.KEYCLOAK_CLIENT_ID,
     },
   ));
 
@@ -23,6 +28,7 @@ const AuthRequired = (props) => {
       {
         checkLoginIframe: false,
         onLoad: 'check-sso',
+        pkceMethod: 'S256'
       },
     ).then((auth) => {
       setAuthenticated(auth);
