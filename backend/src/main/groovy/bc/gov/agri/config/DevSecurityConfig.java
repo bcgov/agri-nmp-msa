@@ -6,6 +6,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.web.cors.CorsUtils;
 
 @Configuration
@@ -47,7 +49,7 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
         .permitAll()
         .and()
         .oauth2ResourceServer()
-        .jwt();
+        .jwt()
         .jwtAuthenticationConverter(this.jwtAuthenticationConverter());
   }
 
