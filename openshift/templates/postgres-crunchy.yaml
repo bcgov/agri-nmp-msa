@@ -101,7 +101,7 @@ objects:
                 claimName: nmp-msa-postgresql
           containers:
             - name: postgresql
-              image: 'crunchydata/crunchy-postgres-gis:centos7-12.4-3.0-4.4.1'
+              image: 'image-registry.apps.silver.devops.gov.bc.ca/624dc1-tools/psql-crunchy:prod'
               ports:
                 - containerPort: 5432
                   protocol: TCP
