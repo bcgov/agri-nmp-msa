@@ -2,7 +2,7 @@ import axios from 'axios';
 import fileDownload from 'js-file-download';
 import React, { useContext, useState } from 'react';
 import { KeycloakContext } from '../auth';
-import {ConfigContext} from "../context";
+import { ConfigContext } from '../context';
 
 const StationTable = (props) => {
   const { stations, updateStation } = props;
@@ -48,39 +48,47 @@ const StationTable = (props) => {
     updateStation(s.id, update);
   };
 
-  const cancel = (s) => {
+  const cancel = () => {
     setEditing(null);
   };
 
   return (
-    <table id={'stations'}>
+    <table id="stations">
       <thead>
-      <tr>
-        <th>ID</th>
-        <th colSpan={2}>Link</th>
-        <th>Archival Data</th>
-      </tr>
+        <tr>
+          <th>ID</th>
+          <th colSpan={2}>Link</th>
+          <th>Archival Data</th>
+        </tr>
       </thead>
       <tbody>
-      {stations.map((s) => (
-        <tr key={s.id}>
-          <td>{s.id}</td>
-          <td className="left">
-            {s.id === editing &&
-            <input type="text" maxLength={255} className="stationLink" onChange={(ev) => setDirtyValue(ev.target.value)}
-                   value={dirtyValue} />}
-            {s.id !== editing && s.link}
-          </td>
-          <td className="buttons">
-            {s.id === editing && <button onClick={() => cancel(s)}>Cancel</button>}
-            {s.id === editing && <button onClick={() => save(s)}>Save</button>}
-            {s.id !== editing && <button onClick={() => beginEdit(s)} disabled={editing !== null}>Edit</button>}
-          </td>
-          <td>
-            <button onClick={() => downloadArchive(s)}>Download Archive</button>
-          </td>
-        </tr>
-      ))}
+        {stations.map((s) => (
+          <tr key={s.id}>
+            <td>{s.id}</td>
+            <td className="left">
+              {s.id === editing
+            && (
+            <input
+              type="text"
+              maxLength={255}
+              className="stationLink"
+              onChange={(ev) => setDirtyValue(ev.target.value)}
+              value={dirtyValue}
+            />
+            )}
+              {s.id !== editing && s.link}
+            </td>
+            <td className="buttons">
+              {s.id === editing && <button onClick={() => cancel(s)}>Cancel</button>}
+              {s.id === editing && <button onClick={() => save(s)}>Save</button>}
+              {s.id !== editing
+                && <button onClick={() => beginEdit(s)} disabled={editing !== null}>Edit</button>}
+            </td>
+            <td>
+              <button onClick={() => downloadArchive(s)}>Download Archive</button>
+            </td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );

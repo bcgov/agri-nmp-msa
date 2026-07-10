@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
-import { PageCustomizationContext } from '../page';
+import PageCustomizationContext from '../pageContext';
 
 const Sidebar = () => {
-
   const pageCustomization = useContext(PageCustomizationContext);
 
   return (

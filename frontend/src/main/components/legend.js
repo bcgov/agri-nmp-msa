@@ -4,9 +4,7 @@ import { Control, DomUtil } from 'leaflet';
 import { MapControl, withLeaflet } from 'react-leaflet';
 
 class Legend extends MapControl {
-
   createLeafletElement(_props) {
-
     const riskValues = [
       {
         name: 'Low',
@@ -28,25 +26,24 @@ class Legend extends MapControl {
     ];
 
     const content = ([
-        <h4>Rainfall amount</h4>,
-        <ul>
-          {riskValues.map((rv) => (
-            <li key={rv.className} className={rv.className}>
-              {rv.name}
-            </li>
-          ))}
-        </ul>]
+      <h4>Rainfall amount</h4>,
+      <ul>
+        {riskValues.map((rv) => (
+          <li key={rv.className} className={rv.className}>
+            {rv.name}
+          </li>
+        ))}
+      </ul>]
     );
 
     class LL extends Control {
-
-      onAdd(map) {
+      onAdd() {
         const l = DomUtil.create('div', 'legend');
         l.innerHTML = ReactDOMServer.renderToString(content);
         return l;
       }
 
-      onRemove(map) {
+      onRemove() {
       }
     }
 

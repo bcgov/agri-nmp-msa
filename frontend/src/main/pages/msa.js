@@ -1,12 +1,14 @@
 import axios from 'axios';
 import moment from 'moment';
 import React, { useContext, useEffect, useState } from 'react';
-import { GeoJSON, Map, Popup, TileLayer, } from 'react-leaflet';
+import {
+  GeoJSON, Map, Popup, TileLayer,
+} from 'react-leaflet';
 import styles from '../../shared/colors.scss';
 import Loading from '../../shared/components/loading';
 import Legend from '../components/legend';
-import { PageCustomizationContext } from '../page';
-import {ConfigContext} from "../context";
+import PageCustomizationContext from '../pageContext';
+import { ConfigContext } from '../context';
 
 const tileLayers = [
   {
@@ -110,30 +112,30 @@ const Msa = () => {
                 && <a className="weatherLink" target="_" href={selectedFeature.properties.link}>Weather Report</a>}
                 <table className="riskTable">
                   <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>24-hr precipitation (mm)</th>
-                    <th>72-hr precipitation (mm)</th>
-                    <th>Rainfall amount</th>
-                  </tr>
+                    <tr>
+                      <th>Date</th>
+                      <th>24-hr precipitation (mm)</th>
+                      <th>72-hr precipitation (mm)</th>
+                      <th>Rainfall amount</th>
+                    </tr>
                   </thead>
                   <tbody>
-                  {[0, 1, 2, 3, 4].map((v) => {
-                    const s = selectedFeature.properties.forecasts.statistics[v];
-                    if (!!s) {
-                      return (
-                        <tr key={`forecast-${v}`}>
-                          <td>{formatDate(moment(s.associatedForecast.forDate))}</td>
-                          <td>{formatNumeric(s.next24 ? s.next24 : 0, 0)}</td>
-                          <td>{formatNumeric(s.next72 ? s.next72 : 0, 0)}</td>
-                          <td className={`risk-${s.runoffRisk}`}>
-                            {riskMap[s.runoffRisk]}
-                          </td>
-                        </tr>
-                      );
-                    }
-                    return null;
-                  })}
+                    {[0, 1, 2, 3, 4].map((v) => {
+                      const s = selectedFeature.properties.forecasts.statistics[v];
+                      if (s) {
+                        return (
+                          <tr key={`forecast-${v}`}>
+                            <td>{formatDate(moment(s.associatedForecast.forDate))}</td>
+                            <td>{formatNumeric(s.next24 ? s.next24 : 0, 0)}</td>
+                            <td>{formatNumeric(s.next72 ? s.next72 : 0, 0)}</td>
+                            <td className={`risk-${s.runoffRisk}`}>
+                              {riskMap[s.runoffRisk]}
+                            </td>
+                          </tr>
+                        );
+                      }
+                      return null;
+                    })}
                   </tbody>
                 </table>
 
@@ -141,7 +143,7 @@ const Msa = () => {
 
                   {[{ i: 0, name: 'today' }, { i: 1, name: 'tomorrow' }].map((v) => {
                     const s = selectedFeature.properties.forecasts.statistics[v.i];
-                    if (!!s) {
+                    if (s) {
                       const formatted24 = formatNumeric(s.next24 ? s.next24 : 0, 2);
                       const formatted72 = formatNumeric(s.next72 ? s.next72 : 0, 2);
                       const worksheetLink = pageCustomization.armLink.replace('{24}', formatted24).replace('{72}', formatted72);
@@ -153,7 +155,6 @@ const Msa = () => {
                         </div>
                       );
                     }
-
                   })}
                 </div>
 

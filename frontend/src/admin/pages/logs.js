@@ -3,10 +3,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import Loading from '../../shared/components/loading';
 import { KeycloakContext } from '../auth';
 import RunlogTable from '../components/run_log';
-import {ConfigContext} from "../context";
+import { ConfigContext } from '../context';
 
 const RunLogs = () => {
-
   const [report, setReport] = useState({});
   const [loaded, setLoaded] = useState(false);
   const keycloak = useContext(KeycloakContext);

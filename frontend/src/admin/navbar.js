@@ -6,7 +6,6 @@ const Navbar = (props) => {
   const { history } = props;
   const keycloak = useContext(KeycloakContext);
 
-
   const nav = (path, name) => ({
     path,
     name,
@@ -22,9 +21,9 @@ const Navbar = (props) => {
     const preferenceOrder = ['name', 'preferred_username', 'given_name', 'sub'];
 
     for (const p of preferenceOrder) {
-      if ((p in keycloak.idTokenParsed) &&
-        (keycloak.idTokenParsed[p] !== null) &&
-        (keycloak.idTokenParsed[p].length > 0)) {
+      if ((p in keycloak.idTokenParsed)
+        && (keycloak.idTokenParsed[p] !== null)
+        && (keycloak.idTokenParsed[p].length > 0)) {
         return keycloak.idTokenParsed[p];
       }
     }
@@ -32,13 +31,13 @@ const Navbar = (props) => {
     return 'User';
   };
 
-  let [activeLink, setActiveLink] = useState(null);
+  const [activeLink, setActiveLink] = useState(null);
   useEffect(() => {
     setActiveLink(history.location.pathname);
   }, [history.location.pathname]);
 
   return (
-    <div className={'topNav nav'}>
+    <div className="topNav nav">
       <ul>
         {navs.map((n) => (
           <li key={n.name}>
@@ -51,8 +50,8 @@ const Navbar = (props) => {
             </button>
           </li>
         ))}
-        <li className={'filler'}></li>
-        <li className={'right'}>
+        <li className="filler" />
+        <li className="right">
           <button
             onClick={() => keycloak.logout()}
           >

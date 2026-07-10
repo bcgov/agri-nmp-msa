@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import Loading from '../../shared/components/loading';
 import { KeycloakContext } from '../auth';
 import StationTable from '../components/station_table';
-import {ConfigContext} from "../context";
+import { ConfigContext } from '../context';
 
 const Stations = () => {
   const [stations, setStations] = useState([]);
