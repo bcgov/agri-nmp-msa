@@ -1,11 +1,10 @@
 import axios from 'axios';
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Loading from '../shared/components/loading';
 import Sidebar from './components/sidebar';
 import Msa from './pages/msa';
-import {ConfigContext} from "./context";
-
-const PageCustomizationContext = React.createContext({ sidebarMarkup: null });
+import PageCustomizationContext from './pageContext';
+import { ConfigContext } from './context';
 
 const PageStructure = () => {
   const [pageCustomization, setPageCustomization] = useState([]);
@@ -35,4 +34,3 @@ const PageStructure = () => {
 };
 
 export default PageStructure;
-export { PageCustomizationContext };

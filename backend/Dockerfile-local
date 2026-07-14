@@ -1,5 +1,6 @@
-FROM openjdk:11-jdk-slim-bullseye
+FROM openjdk:11.0.11-jdk-slim-buster
 RUN mkdir /app
 WORKDIR /app
 ADD . .
+# If the gradle fails, add the flags '--stacktrace --info' below
 CMD ./gradlew bootRun

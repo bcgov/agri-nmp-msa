@@ -14,7 +14,7 @@ const AuthRequired = (props) => {
     {
       url: CONFIG.KEYCLOAK_URL,
       realm: CONFIG.KEYCLOAK_REALM,
-      sslRequired: "external",
+      sslRequired: 'external',
       resource: CONFIG.KEYCLOAK_CLIENT_ID,
       publicClient: true,
       confidentialPort: 0,
@@ -28,7 +28,7 @@ const AuthRequired = (props) => {
       {
         checkLoginIframe: false,
         onLoad: 'check-sso',
-        pkceMethod: 'S256'
+        pkceMethod: 'S256',
       },
     ).then((auth) => {
       setAuthenticated(auth);

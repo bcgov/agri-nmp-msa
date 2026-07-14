@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import Loading from '../../shared/components/loading';
 import { KeycloakContext } from '../auth';
 import MarkupEditor from '../components/markup_editor';
-import {ConfigContext} from "../context";
+import { ConfigContext } from '../context';
 
 const PageCustomization = () => {
   const [statusText, setStatusText] = useState('');
@@ -15,8 +15,6 @@ const PageCustomization = () => {
   const CONFIG = useContext(ConfigContext);
 
   useEffect(() => {
-
-
     keycloak.updateToken(30).then(() => {
       const authHeader = `Bearer ${keycloak.idToken}`;
       const promises = [
@@ -68,7 +66,7 @@ const PageCustomization = () => {
           <fieldset>
             <label htmlFor="armLink">
               <h3>ARM Worksheet Link</h3>
-              <span className={'help'}>
+              <span className="help">
                 Clicking on the <strong>Field Assessment Worksheet</strong> link directs to this URL. The tokens <em>{'{24}'}</em> and <em>{'{72}'}</em> in the URL will be replaced with the corresponding 24 and 72-hour precipitation values for the given station and date.
               </span>
             </label>
@@ -86,7 +84,7 @@ const PageCustomization = () => {
 
             <label htmlFor="enableWeatherLink">
               <h3>Show Weather Station Links</h3>
-              <span className={'help'}>If checked, any station which has a weather station URL set will have the link displayed in the popup.</span>
+              <span className="help">If checked, any station which has a weather station URL set will have the link displayed in the popup.</span>
             </label>
             <input
               name="enableWeatherLink"
@@ -99,7 +97,7 @@ const PageCustomization = () => {
             />
           </fieldset>
           <button disabled={saving || !dirty} type="submit" className="btn">Save</button>
-          <div className={'statusText'}>{statusText}</div>
+          <div className="statusText">{statusText}</div>
         </form>
       </div>
     );
