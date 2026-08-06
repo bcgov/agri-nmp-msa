@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nmp-msa-postgresql
+    name: nmp-msa-postgresql
+    role: postgresql
+  name: nmp-msa-postgresql
+  annotations:
+    image.openshift.io/triggers: '[{"from": {"kind": "ImageStreamTag", "name": "psql-crunchy:latest",
+      "namespace": "624dc1-tools"}, "fieldPath": "spec.template.spec.containers[?(@.name==\"postgresql\")].image",
+      "paused": false}]'
+spec:
+  selector:
+    matchLabels:
+      name: nmp-msa-postgresql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        name: nmp-msa-postgresql
+    spec:
+      volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: nmp-msa-postgresql
+      containers:
+        - env:
+          - name: PG_DATABASE
+            value: msa
+          - name: PG_MODE
+            value: primary
+          - name: PG_PRIMARY_PORT
+            value: '5432'
+          - name: PGDATA_PATH_OVERRIDE
+            value: persist
+          - name: PG_PRIMARY_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_REPLICATION_USER
+                name: nmp-msa-secrets
+          - name: PG_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_ROOT_PASSWORD
+                name: nmp-msa-secrets
+          - name: PG_PRIMARY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_REPLICATION_PASSWORD
+                name: nmp-msa-secrets
+          - name: PG_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: nmp-msa-secrets
+          - name: PG_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: nmp-msa-secrets
+          image: 'image-registry.openshift-image-registry.svc:5000/624dc1-tools/psql-crunchy:latest'
+          imagePullPolicy: IfNotPresent
+          name: postgresql
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 25
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 300m
+              memory: 1G
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /pgdata
+              name: postgresql-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nmp-msa-postgresql
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5G
+  volumeMode: Filesystem
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nmp-msa-postgresql
+  annotations:
+    template.openshift.io/expose-uri: postgres://{.spec.clusterIP}:{.spec.ports[?(.name=="postgresql")].port}
+  labels:
+    name: postgresql
+    app: nmp-msa
+    role: postgresql
+spec:
+  ports:
+    - name: postgresql
+      protocol: TCP
+      port: 5432
+      targetPort: 5432
+  selector:
+    name: nmp-msa-postgresql

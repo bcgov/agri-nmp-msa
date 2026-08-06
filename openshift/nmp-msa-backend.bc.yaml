@@ -1,0 +1,43 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  annotations:
+    description: NMP MSA Backend Image Stream
+  name: nmp-msa-backend
+---
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  annotations:
+    description: NMP MSA Backend builder
+  name: nmp-msa-backend
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: nmp-msa-backend:latest
+  resources:
+    limits:
+      cpu: '1'
+      memory: 2G
+    requests:
+      cpu: 250m
+      memory: 400M
+  runPolicy: SerialLatestOnly
+  source:
+    contextDir: backend
+    git:
+      uri: "https://github.com/bcgov/agri-nmp-msa.git"
+    type: Git
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: 's2i-java:builder'
+  triggers:
+    - type: GitHub
+      github:
+        secretReference:
+          name: nmp-github-webhook
+    - type: ConfigChange

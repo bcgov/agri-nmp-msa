@@ -1,0 +1,102 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+labels:
+  template: nmp-msa-backend-template
+parameters:
+  - name: IMAGE_TAG
+    description: Default is latest, other valid values are test or prod
+    value: latest
+  - name: CPU_LIMIT
+    description: CPU upper limit
+    value: 400m
+  - name: MEMORY_LIMIT
+    description: Memory upper limit
+    value: 750M
+objects:
+  - kind: Deployment
+    apiVersion: apps/v1
+    metadata:
+      name: nmp-msa-backend
+      annotations:
+        image.openshift.io/triggers: '[{"from": {"kind": "ImageStreamTag", "name": "nmp-msa-backend:${IMAGE_TAG}", "namespace": "624dc1-tools"}, "fieldPath": "spec.template.spec.containers[?(@.name==\"backend\")].image", "paused": false}]'
+      labels:
+        name: nmp-msa-backend
+        app: nmp-msa
+        role: backend
+    spec:
+      selector:
+        matchLabels:
+          name: nmp-msa-backend
+      strategy:
+        type: Recreate
+      template:
+        metadata:
+          labels:
+            name: nmp-msa-backend
+        spec:
+          restartPolicy: Always
+          containers:
+            - env:
+              - name: JAVA_APP_JAR
+                value: src-1.0-SNAPSHOT.jar
+              - name: GOV_BC_AGRI_DB_URL
+                value: jdbc:postgresql://nmp-msa-postgresql:5432/msa
+              - name: GOV_BC_AGRI_DB_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: nmp-msa-secrets
+                    key: DATABASE_USER
+              - name: GOV_BC_AGRI_DB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: nmp-msa-secrets
+                    key: DATABASE_PASSWORD
+              - name: GOV_BC_AGRI_OWM_APIKEY
+                valueFrom:
+                  secretKeyRef:
+                    name: nmp-msa-secrets
+                    key: OWM_APIKEY
+              - name: SPRING_PROFILES_ACTIVE
+                valueFrom:
+                  configMapKeyRef:
+                    name: nmp-msa-backend-config
+                    key: SPRING_PROFILES_ACTIVE
+              - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+                valueFrom:
+                  configMapKeyRef:
+                    name: nmp-msa-keycloak
+                    key: JWT_ISSUER_URI
+              image: 'image-registry.openshift-image-registry.svc:5000/624dc1-tools/nmp-msa-backend:${IMAGE_TAG}'
+              imagePullPolicy: IfNotPresent
+              name: backend
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+              readinessProbe:
+                tcpSocket:
+                  port: 8080
+                initialDelaySeconds: 20
+                timeoutSeconds: 5
+                periodSeconds: 30
+                successThreshold: 1
+                failureThreshold: 3
+              resources:
+                limits:
+                  cpu: "${CPU_LIMIT}"
+                  memory: "${MEMORY_LIMIT}"
+              terminationMessagePath: /dev/termination-log
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: nmp-msa-backend
+      labels:
+        name: nmp-msa-backend
+        app: nmp-msa
+    spec:
+      ports:
+        - name: web-backend
+          protocol: TCP
+          port: 8080
+          targetPort: 8080
+      selector:
+        name: nmp-msa-backend
