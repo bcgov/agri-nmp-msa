@@ -1,0 +1,92 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+labels:
+  template: nmp-msa-envoy-template
+parameters:
+  - name: URL
+    value: agri-nmp-msa-dev.apps.silver.devops.gov.bc.ca
+objects:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: nmp-msa
+      name: nmp-msa-envoy
+      role: front-proxy
+      template: nmp-msa-envoy-template
+    name: nmp-msa-envoy
+  spec:
+    selector:
+      matchLabels:
+        name: nmp-msa-envoy
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: nmp-msa-envoy
+      spec:
+        volumes:
+          - configMap:
+              defaultMode: 420
+              items:
+              - key: envoy-config.yaml
+                path: envoy.yaml
+              name: envoy-config
+            name: config-volume
+        containers:
+          - image: envoyproxy/envoy:v1.12-latest
+            imagePullPolicy: IfNotPresent
+            name: envoy
+            ports:
+            - containerPort: 8080
+              protocol: TCP
+            readinessProbe:
+              failureThreshold: 3
+              initialDelaySeconds: 20
+              periodSeconds: 30
+              successThreshold: 1
+              tcpSocket:
+                port: 8080
+              timeoutSeconds: 3
+            resources:
+              limits:
+                cpu: 500m
+                memory: 200M
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+            volumeMounts:
+              - mountPath: /etc/envoy
+                name: config-volume
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: nmp-msa-envoy
+    labels:
+      app: nmp-msa
+      name: nmp-msa-envoy
+  spec:
+    ports:
+      - name: web-ingress
+        protocol: TCP
+        port: 8080
+        targetPort: 8080
+    selector:
+      name: nmp-msa-envoy
+- kind: Route
+  apiVersion: route.openshift.io/v1
+  metadata:
+    name: nmp-msa
+    labels:
+      app: nmp-msa
+      name: nmp-msa-envoy
+  spec:
+    host: ${URL}
+    to:
+      kind: Service
+      name: nmp-msa-envoy
+    port:
+      targetPort: web-ingress
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect

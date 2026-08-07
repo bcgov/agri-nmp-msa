@@ -1,0 +1,56 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: nmp-msa-frontend-caddy
+---
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: nmp-msa-frontend-caddy
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'nmp-msa-frontend-caddy:latest'
+  resources:
+    limits:
+      cpu: 250m
+      memory: 1Gi
+    requests:
+      cpu: 100m
+      memory: 1Gi
+  strategy:
+    type: Docker
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: 'caddy:2-alpine'
+  source:
+    type: Dockerfile
+    dockerfile: |-
+      FROM caddy:2-alpine
+      EXPOSE 8080
+      COPY Caddyfile /etc/caddy
+      COPY build/ /srv/
+      COPY assets/ /srv/
+    images:
+      - from:
+          kind: ImageStreamTag
+          name: 'nmp-msa-frontend:latest'
+        paths:
+          - sourcePath: /src/Caddyfile
+            destinationDir: .
+          - sourcePath: /src/public/build
+            destinationDir: .
+          - sourcePath: /src/assets
+            destinationDir: .
+  triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChange: {}
+    - type: ImageChange
+      imageChange:
+        from:
+          kind: ImageStreamTag
+          name: 'nmp-msa-frontend:latest'
+  runPolicy: SerialLatestOnly

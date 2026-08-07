@@ -1,0 +1,97 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+labels:
+  template: nmp-msa-frontend-template
+parameters:
+  - name: IMAGE_TAG
+    description: Default is latest, other valid values are test or prod
+    value: latest
+  - name: CPU_LIMIT
+    description: CPU upper limit
+    value: 100m
+  - name: MEMORY_LIMIT
+    description: Memory upper limit
+    value: 90M
+  - name: URL
+    value: https://agri-nmp-msa.apps.silver.devops.gov.bc.ca
+objects:
+  - kind: Deployment
+    apiVersion: apps/v1
+    metadata:
+      annotations:
+        image.openshift.io/triggers: '[{"from": {"kind": "ImageStreamTag", "name": "nmp-msa-frontend-caddy:${IMAGE_TAG}", "namespace": "624dc1-tools"}, "fieldPath": "spec.template.spec.containers[?(@.name==\"frontend\")].image", "paused": false}]'
+      name: nmp-msa-frontend
+      labels:
+        name: nmp-msa-frontend
+        app: nmp-msa
+        role: frontend
+    spec:
+      selector:
+        matchLabels:
+          name: nmp-msa-frontend
+      strategy:
+        type: Recreate
+      template:
+        metadata:
+          creationTimestamp:
+          labels:
+            name: nmp-msa-frontend
+        spec:
+          containers:
+            - resources:
+                limits:
+                  cpu: "${CPU_LIMIT}"
+                  memory: "${MEMORY_LIMIT}"
+              readinessProbe:
+                tcpSocket:
+                  port: 5001
+                initialDelaySeconds: 2
+                timeoutSeconds: 2
+                periodSeconds: 30
+                successThreshold: 1
+                failureThreshold: 3
+              terminationMessagePath: /dev/termination-log
+              name: frontend
+              env:
+                - name: API_BASE
+                  value: '${URL}'
+                - name: GA_PROPERTY
+                  valueFrom:
+                    secretKeyRef:
+                      name: nmp-msa-secrets
+                      key: GOOGLE_ANALYTICS_PROPERTY
+                - name: KEYCLOAK_REALM
+                  valueFrom:
+                    configMapKeyRef:
+                      name: nmp-msa-frontend-build-config
+                      key: KEYCLOAK_REALM
+                - name: KEYCLOAK_CLIENT_ID
+                  valueFrom:
+                    configMapKeyRef:
+                      name: nmp-msa-frontend-build-config
+                      key: KEYCLOAK_CLIENT_ID
+                - name: KEYCLOAK_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: nmp-msa-frontend-build-config
+                      key: KEYCLOAK_URL
+              ports:
+                - containerPort: 5001
+                  protocol: TCP
+              imagePullPolicy: IfNotPresent
+              image: 'image-registry.openshift-image-registry.svc:5000/624dc1-tools/nmp-msa-frontend-caddy:${IMAGE_TAG}'
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: nmp-msa-frontend
+      labels:
+        name: nmp-msa-frontend
+        app: nmp-msa
+    spec:
+      ports:
+        - name: web-frontend
+          protocol: TCP
+          port: 5001
+          targetPort: 5001
+      selector:
+        name: nmp-msa-frontend
