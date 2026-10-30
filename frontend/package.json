@@ -49,8 +49,8 @@
   },
   "scripts": {
     "start": "node start",
-    "dist": "webpack --production --config webpack.dist.js",
-    "build": "webpack --production --config webpack.dist.js",
+    "dist": "webpack --mode production --config webpack.dist.js",
+    "build": "webpack --mode production --config webpack.dist.js",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix"
   }

@@ -37,6 +37,7 @@ const webpackConfig = {
         },
       },
     },
+    moduleIds: 'deterministic',
   },
   output: {
     crossOriginLoading: 'anonymous',
@@ -53,7 +54,7 @@ const webpackConfig = {
       test: /\.jsx?$/,
       loader: 'babel-loader',
       exclude: [nodeModulesPath],
-      query: {
+      options: {
         presets: ['@babel/preset-react', ['@babel/preset-env', { targets: 'last 2 versions, >3%, ie 11' }]],
         plugins: ['@babel/plugin-proposal-object-rest-spread'],
       },
@@ -65,6 +66,7 @@ const webpackConfig = {
         loader: 'css-loader',
         options: {
           sourceMap: true,
+          url: false,
         },
       }, {
         loader: 'sass-loader',
@@ -74,18 +76,18 @@ const webpackConfig = {
       },
       ],
     }, {
-      test: /\.(jpe?g|png|gif|svg)$/i,
-      type: 'asset/resource',
-      generator: {
-        filename: '[name][ext]'
-      },
-    }, {
       test: /\.(otf|eot|svg|ttf|woff|woff2)$/i,
       type: 'asset/inline',
       parser: {
         dataUrlCondition: {
           maxSize: 10000,
         },
+      },
+    }, {
+      test: /\.(jpe?g|png|gif|svg)$/i,
+      type: 'asset/resource',
+      generator: {
+        filename: '[name][ext]'
       },
     }, {
       test: /\.mjs$/,
@@ -96,7 +98,6 @@ const webpackConfig = {
   },
   devtool: 'source-map',
   plugins: [
-    new Webpack.HashedModuleIdsPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',
