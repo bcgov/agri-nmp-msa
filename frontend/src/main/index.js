@@ -4,7 +4,7 @@ import './main.scss';
 import PageStructure from './page';
 import { ConfigContext } from './context';
 
-import(/* webpackChunkName: "app_config" */ '../shared/config').then(({ CONFIG }) => {
+import('../shared/config').then(({ CONFIG }) => {
   ReactDOM.render(
     <ConfigContext.Provider value={CONFIG}>
       <PageStructure />

@@ -1,17 +1,17 @@
-const Webpack = require('webpack');
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CompressionPlugin = require('compression-webpack-plugin');
+import Webpack from 'webpack';
+import path from 'path';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import CompressionPlugin from 'compression-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-require('dotenv').config();
+const nodeModulesPath = path.resolve(import.meta.dirname, 'node_modules');
+const buildPath = path.resolve(import.meta.dirname, 'public', 'build');
+const mainPath = path.resolve(import.meta.dirname, 'src', 'main/index.js');
+const adminPath = path.resolve(import.meta.dirname, 'src', 'admin/index.js');
 
-const nodeModulesPath = path.resolve(__dirname, 'node_modules');
-const buildPath = path.resolve(__dirname, 'public', 'build');
-const mainPath = path.resolve(__dirname, 'src', 'main/index.js');
-const adminPath = path.resolve(__dirname, 'src', 'admin/index.js');
-
-const config = {
+const webpackConfig = {
   entry: {
     mainBundle: [
       '@babel/polyfill',
@@ -61,10 +61,6 @@ const config = {
       test: /\.(s?)css$/,
       use: [{
         loader: MiniCssExtractPlugin.loader,
-        options: {
-          hmr: false,
-          reloadAll: true,
-        },
       }, {
         loader: 'css-loader',
         options: {
@@ -79,15 +75,18 @@ const config = {
       ],
     }, {
       test: /\.(jpe?g|png|gif|svg)$/i,
-      loaders: ['file-loader?name=[name].[ext]'],
+      type: 'asset/resource',
+      generator: {
+        filename: '[name][ext]'
+      },
     }, {
       test: /\.(otf|eot|svg|ttf|woff|woff2)$/i,
-      use: [{
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
+      type: 'asset/inline',
+      parser: {
+        dataUrlCondition: {
+          maxSize: 10000,
         },
-      }],
+      },
     }, {
       test: /\.mjs$/,
       include: /node_modules/,
@@ -112,14 +111,14 @@ const config = {
       templateParameters: {
         googleAnalyticsEnabled: 'GA_ENABLED' in process.env ? JSON.parse(process.env.GA_ENABLED) : false,
       },
-      template: path.resolve(__dirname, 'templates/main.html'),
+      template: path.resolve(import.meta.dirname, 'templates/main.html'),
     }),
     new HtmlWebpackPlugin({
       chunks: ['adminBundle'],
       filename: 'admin.html',
-      template: path.resolve(__dirname, 'templates/admin.html'),
+      template: path.resolve(import.meta.dirname, 'templates/admin.html'),
     }),
   ],
 };
 
-module.exports = config;
+export default webpackConfig;

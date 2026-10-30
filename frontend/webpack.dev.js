@@ -1,30 +1,26 @@
-const Webpack = require('webpack');
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+import Webpack from 'webpack';
+import path from 'path';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-require('dotenv').config();
+const nodeModulesPath = path.resolve(import.meta.dirname, 'node_modules');
+const buildPath = path.resolve(import.meta.dirname, 'public', 'build');
+const mainPath = path.resolve(import.meta.dirname, 'src', 'main/index.js');
+const adminPath = path.resolve(import.meta.dirname, 'src', 'admin/index.js');
 
-const nodeModulesPath = path.resolve(__dirname, 'node_modules');
-const buildPath = path.resolve(__dirname, 'public', 'build');
-const mainPath = path.resolve(__dirname, 'src', 'main/index.js');
-const adminPath = path.resolve(__dirname, 'src', 'admin/index.js');
-
-const config = {
+const webpackConfig = {
   mode: 'development',
   performance: {
     hints: false,
   },
   entry: {
     mainBundle: [
-      'webpack/hot/dev-server',
-      'react-hot-loader/patch',
       '@babel/polyfill',
       mainPath,
     ],
     adminBundle: [
-      'webpack/hot/dev-server',
-      'react-hot-loader/patch',
       '@babel/polyfill',
       adminPath,
     ],
@@ -48,31 +44,25 @@ const config = {
   },
   resolve: {
     extensions: ['.js', '.jsx', '.mjs', '.gql', '.graphql'],
-    alias: {
-      'react-dom': '@hot-loader/react-dom',
-    },
   },
   module: {
     rules: [{
       test: /\.jsx?$/,
       loader: 'babel-loader',
       exclude: [nodeModulesPath],
-      query: {
+      options: {
         presets: ['@babel/preset-react', '@babel/preset-env'],
-        plugins: ['@babel/plugin-proposal-object-rest-spread', 'react-hot-loader/babel'],
+        plugins: ['@babel/plugin-proposal-object-rest-spread'],
       },
     }, {
       test: /\.(s?)css$/,
       use: [{
         loader: MiniCssExtractPlugin.loader,
-        options: {
-          hmr: true,
-          reloadAll: true,
-        },
       }, {
         loader: 'css-loader',
         options: {
           sourceMap: true,
+          url: false,
         },
       }, {
         loader: 'sass-loader',
@@ -82,16 +72,19 @@ const config = {
       },
       ],
     }, {
-      test: /\.(jpe?g|png|gif|svg)$/i,
-      loaders: ['file-loader?name=[name].[ext]'],
-    }, {
       test: /\.(otf|eot|svg|ttf|woff|woff2)$/i,
-      use: [{
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
+      type: 'asset/inline',
+      parser: {
+        dataUrlCondition: {
+          maxSize: 10000,
         },
-      }],
+      },
+    }, {
+      test: /\.(jpe?g|png|gif|svg)$/i,
+      type: 'asset/resource',
+      generator: {
+        filename: '[name][ext]'
+      },
     }, {
       test: /\.mjs$/,
       include: /node_modules/,
@@ -119,14 +112,14 @@ const config = {
       templateParameters: {
         googleAnalyticsEnabled: false,
       },
-      template: path.resolve(__dirname, 'templates/main.html'),
+      template: path.resolve(import.meta.dirname, 'templates/main.html'),
     }),
     new HtmlWebpackPlugin({
       chunks: ['adminBundle'],
       filename: 'admin.html',
-      template: path.resolve(__dirname, 'templates/admin.html'),
+      template: path.resolve(import.meta.dirname, 'templates/admin.html'),
     }),
   ],
 };
 
-module.exports = config;
+export default webpackConfig;

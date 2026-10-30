@@ -1,5 +1,4 @@
 import { Editor } from '@tinymce/tinymce-react';
-import React from 'react';
 
 const MarkupEditor = (props) => {
   const { markup, onChange } = props;

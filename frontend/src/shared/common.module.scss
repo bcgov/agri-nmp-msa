@@ -1,5 +1,20 @@
-@import './media.scss';
-@import './colors.scss';
+$lowRisk: #77e65c;
+$mediumRisk: #fffd3b;
+$mediumHighRisk: #ff863a;
+$highRisk: #ff1c23;
+$unknownRisk: #6199d1;
+
+:export {
+  lowRiskColor: $lowRisk;
+  mediumRiskColor: $mediumRisk;
+  mediumHighRiskColor: $mediumHighRisk;
+  highRiskColor: $highRisk;
+  unknownRiskColor: $unknownRisk;
+}
+
+$linkBackground: #003366;
+$logoBackground: #003366;
+$tableHeaderBackground: #888888;
 
 @font-face {
   font-family: 'Myriad-Pro';

@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import {
   GeoJSON, Map, Popup, TileLayer,
 } from 'react-leaflet';
-import styles from '../../shared/colors.scss';
+import * as styles from '../../shared/common.module.scss';
 import Loading from '../../shared/components/loading';
 import Legend from '../components/legend';
 import PageCustomizationContext from '../pageContext';

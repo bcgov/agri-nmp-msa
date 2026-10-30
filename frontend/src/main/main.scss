@@ -1,6 +1,6 @@
-@import "~leaflet/dist/leaflet.css";
-
-@import '../shared/common.scss';
+@use "leaflet/dist/leaflet.css";
+@use '../shared/common.module.scss' as *;
+@use '../shared/media';
 
 $headerHeight: 88px;
 $phoneMapHeight: 300px;
@@ -10,19 +10,19 @@ $phoneMapHeight: 300px;
   margin: 0;
   padding: 0;
 
-  @include phone() {
+  @include media.phone() {
     top: $headerHeight;
     height: $phoneMapHeight;
     right: 0;
     left: 0;
   }
-  @include tablet() {
+  @include media.tablet() {
     top: $headerHeight;
     bottom: 0;
     right: 0;
     left: 200px;
   }
-  @include desktop() {
+  @include media.desktop() {
     top: $headerHeight;
     bottom: 0;
     right: 0;
@@ -34,19 +34,19 @@ $phoneMapHeight: 300px;
   position: fixed;
   background: white;
 
-  @include phone() {
+  @include media.phone() {
     top: $headerHeight+$phoneMapHeight;
     bottom: 0;
     left: 0;
     right: 0;
   }
-  @include tablet() {
+  @include media.tablet() {
     top: $headerHeight;
     bottom: 0;
     left: 0;
     width: 200px;
   }
-  @include desktop() {
+  @include media.desktop() {
     top: $headerHeight;
     bottom: 0;
     left: 0;

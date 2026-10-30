@@ -5,7 +5,7 @@ import './admin.scss';
 import Router from './router';
 import { ConfigContext } from './context';
 
-import(/* webpackChunkName: "app_config" */ '../shared/config').then(({ CONFIG }) => {
+import('../shared/config').then(({ CONFIG }) => {
   ReactDOM.render(
     <ConfigContext.Provider value={CONFIG}>
       <Router CONFIG={CONFIG} />
