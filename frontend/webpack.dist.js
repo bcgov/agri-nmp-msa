@@ -4,8 +4,6 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
-process.loadEnvFile();
-
 const nodeModulesPath = path.resolve(import.meta.dirname, 'node_modules');
 const buildPath = path.resolve(import.meta.dirname, 'public', 'build');
 const mainPath = path.resolve(import.meta.dirname, 'src', 'main/index.js');
