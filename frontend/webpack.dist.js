@@ -104,7 +104,10 @@ const webpackConfig = {
     }),
     new CompressionPlugin(),
     new Webpack.DefinePlugin({
-      _CONFIG_SOURCE: '"Caddy"',
+      _API_BASE: JSON.stringify(process.env.API_BASE),
+      _KEYCLOAK_CLIENT_ID: JSON.stringify(process.env.KEYCLOAK_CLIENT_ID),
+      _KEYCLOAK_URL: JSON.stringify(process.env.KEYCLOAK_URL),
+      _KEYCLOAK_REALM: JSON.stringify(process.env.KEYCLOAK_REALM),
     }),
     new HtmlWebpackPlugin({
       chunks: ['mainBundle'],
