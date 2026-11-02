@@ -5,7 +5,7 @@ import { KeycloakContext } from '../auth';
 import StationTable from '../components/station_table';
 import { ConfigContext } from '../context';
 
-const Stations = () => {
+function Stations() {
   const [stations, setStations] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const keycloak = useContext(KeycloakContext);
@@ -47,6 +47,6 @@ const Stations = () => {
     );
   }
   return (<Loading />);
-};
+}
 
 export default Stations;

@@ -5,7 +5,7 @@ import { KeycloakContext } from '../auth';
 import MarkupEditor from '../components/markup_editor';
 import { ConfigContext } from '../context';
 
-const PageCustomization = () => {
+function PageCustomization() {
   const [statusText, setStatusText] = useState('');
   const [loaded, setLoaded] = useState(false);
   const [dirty, setDirty] = useState(false);
@@ -105,6 +105,6 @@ const PageCustomization = () => {
   return (
     <Loading />
   );
-};
+}
 
 export default PageCustomization;

@@ -4,7 +4,7 @@ import { ConfigContext } from './context';
 
 const KeycloakContext = React.createContext({});
 
-const AuthRequired = (props) => {
+function AuthRequired(props) {
   const { children } = props;
   const CONFIG = useContext(ConfigContext);
 
@@ -63,6 +63,6 @@ const AuthRequired = (props) => {
 
     </div>
   );
-};
+}
 export default AuthRequired;
 export { KeycloakContext };

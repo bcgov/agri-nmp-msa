@@ -5,9 +5,9 @@ import './admin.scss';
 import Router from './router';
 import { ConfigContext } from './context';
 
-import('../shared/config').then(({ CONFIG }) => {
+import('../shared/config').then((CONFIG) => {
   ReactDOM.render(
-    <ConfigContext.Provider value={CONFIG}>
+    <ConfigContext.Provider value={CONFIG.default}>
       <Router CONFIG={CONFIG} />
     </ConfigContext.Provider>,
     document.getElementById('root'),

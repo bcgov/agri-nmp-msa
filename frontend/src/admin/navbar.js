@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
 import { KeycloakContext } from './auth';
 
-const Navbar = (props) => {
+function Navbar(props) {
   const { history } = props;
   const keycloak = useContext(KeycloakContext);
 
@@ -61,6 +61,6 @@ const Navbar = (props) => {
       </ul>
     </div>
   );
-};
+}
 
 export default withRouter(Navbar);

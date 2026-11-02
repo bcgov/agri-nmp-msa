@@ -1,7 +1,7 @@
 import moment from 'moment';
 import React from 'react';
 
-const RunlogTable = (props) => {
+function RunlogTable(props) {
   const { runlogs } = props;
   const formatTimestamp = (v) => (v.format('l HH:mm z'));
 
@@ -33,6 +33,6 @@ const RunlogTable = (props) => {
       </tbody>
     </table>
   );
-};
+}
 
 export default RunlogTable;

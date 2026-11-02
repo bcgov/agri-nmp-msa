@@ -5,7 +5,7 @@ import { KeycloakContext } from '../auth';
 import RunlogTable from '../components/run_log';
 import { ConfigContext } from '../context';
 
-const RunLogs = () => {
+function RunLogs() {
   const [report, setReport] = useState({});
   const [loaded, setLoaded] = useState(false);
   const keycloak = useContext(KeycloakContext);
@@ -34,6 +34,6 @@ const RunLogs = () => {
     );
   }
   return (<Loading />);
-};
+}
 
 export default RunLogs;

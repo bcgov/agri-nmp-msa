@@ -3,8 +3,8 @@ import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import dotenv from 'dotenv';
-dotenv.config();
+
+process.loadEnvFile();
 
 const nodeModulesPath = path.resolve(import.meta.dirname, 'node_modules');
 const buildPath = path.resolve(import.meta.dirname, 'public', 'build');
@@ -103,12 +103,6 @@ const webpackConfig = {
       chunkFilename: '[id].css',
     }),
     new CompressionPlugin(),
-    new Webpack.DefinePlugin({
-      _API_BASE: JSON.stringify(process.env.API_BASE),
-      _KEYCLOAK_CLIENT_ID: JSON.stringify(process.env.KEYCLOAK_CLIENT_ID),
-      _KEYCLOAK_URL: JSON.stringify(process.env.KEYCLOAK_URL),
-      _KEYCLOAK_REALM: JSON.stringify(process.env.KEYCLOAK_REALM),
-    }),
     new HtmlWebpackPlugin({
       chunks: ['mainBundle'],
       filename: 'generated_index.html',

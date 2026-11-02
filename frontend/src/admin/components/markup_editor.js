@@ -1,6 +1,6 @@
 import { Editor } from '@tinymce/tinymce-react';
 
-const MarkupEditor = (props) => {
+function MarkupEditor(props) {
   const { markup, onChange } = props;
 
   return (
@@ -17,6 +17,6 @@ const MarkupEditor = (props) => {
       />
     </div>
   );
-};
+}
 
 export default MarkupEditor;

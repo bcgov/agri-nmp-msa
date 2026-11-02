@@ -6,11 +6,10 @@ import Msa from './pages/msa';
 import PageCustomizationContext from './pageContext';
 import { ConfigContext } from './context';
 
-const PageStructure = () => {
+function PageStructure() {
   const [pageCustomization, setPageCustomization] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const CONFIG = useContext(ConfigContext);
-
   useEffect(() => {
     axios.get(`${CONFIG.API_BASE}/v1/page`).then((response) => {
       setPageCustomization(response.data);
@@ -31,6 +30,6 @@ const PageStructure = () => {
       <Msa />
     </PageCustomizationContext.Provider>
   );
-};
+}
 
 export default PageStructure;

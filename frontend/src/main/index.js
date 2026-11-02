@@ -4,9 +4,9 @@ import './main.scss';
 import PageStructure from './page';
 import { ConfigContext } from './context';
 
-import('../shared/config').then(({ CONFIG }) => {
+import('../shared/config').then((CONFIG) => {
   ReactDOM.render(
-    <ConfigContext.Provider value={CONFIG}>
+    <ConfigContext.Provider value={CONFIG.default}>
       <PageStructure />
     </ConfigContext.Provider>,
     document.getElementById('root'),

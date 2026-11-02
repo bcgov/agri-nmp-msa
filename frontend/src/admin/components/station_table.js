@@ -4,7 +4,7 @@ import React, { useContext, useState } from 'react';
 import { KeycloakContext } from '../auth';
 import { ConfigContext } from '../context';
 
-const StationTable = (props) => {
+function StationTable(props) {
   const { stations, updateStation } = props;
   const CONFIG = useContext(ConfigContext);
 
@@ -92,6 +92,6 @@ const StationTable = (props) => {
       </tbody>
     </table>
   );
-};
+}
 
 export default StationTable;

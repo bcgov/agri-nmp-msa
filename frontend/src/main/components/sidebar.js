@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import PageCustomizationContext from '../pageContext';
 
-const Sidebar = () => {
+function Sidebar() {
   const pageCustomization = useContext(PageCustomizationContext);
 
   return (
@@ -12,6 +12,6 @@ const Sidebar = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Sidebar;

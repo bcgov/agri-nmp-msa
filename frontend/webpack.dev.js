@@ -2,8 +2,6 @@ import Webpack from 'webpack';
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import dotenv from 'dotenv';
-dotenv.config();
 
 const nodeModulesPath = path.resolve(import.meta.dirname, 'node_modules');
 const buildPath = path.resolve(import.meta.dirname, 'public', 'build');
@@ -44,6 +42,9 @@ const webpackConfig = {
   },
   resolve: {
     extensions: ['.js', '.jsx', '.mjs', '.gql', '.graphql'],
+    alias: {
+      'node:process': 'process/browser',
+    },
   },
   module: {
     rules: [{
@@ -99,12 +100,6 @@ const webpackConfig = {
       chunkFilename: '[id].css',
     }),
     new Webpack.HotModuleReplacementPlugin(),
-    new Webpack.DefinePlugin({
-      _API_BASE: 'API_BASE' in process.env ? JSON.stringify(process.env.API_BASE) : '\'http://localhost:8080\'',
-      _KEYCLOAK_CLIENT_ID: 'KEYCLOAK_CLIENT_ID' in process.env ? JSON.stringify(process.env.KEYCLOAK_CLIENT_ID) : '\'nmp\'',
-      _KEYCLOAK_URL: 'KEYCLOAK_URL' in process.env ? JSON.stringify(process.env.KEYCLOAK_URL) : '\'http://localhost:8085/auth/\'',
-      _KEYCLOAK_REALM: 'KEYCLOAK_REALM' in process.env ? JSON.stringify(process.env.KEYCLOAK_REALM) : '\'msa\'',
-    }),
     new HtmlWebpackPlugin({
       chunks: ['mainBundle'],
       filename: 'generated_index.html',
@@ -118,6 +113,7 @@ const webpackConfig = {
       filename: 'admin.html',
       template: path.resolve(import.meta.dirname, 'templates/admin.html'),
     }),
+    new Webpack.EnvironmentPlugin(['API_BASE', 'KEYCLOAK_CLIENT_ID', 'KEYCLOAK_REALM', 'KEYCLOAK_URL']),
   ],
 };
 
