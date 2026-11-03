@@ -20,9 +20,10 @@ handle {
     try_files {path} /generated_index.html
 }
 
+@jsFiles path *.js
 
-templates /app_config* {
-	mime text/javascript application/javascript
+templates @jsFiles {
+	mime text/javascript application/javascript text/plain
 }
 
 templates {
