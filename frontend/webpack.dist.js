@@ -114,6 +114,12 @@ const webpackConfig = {
       filename: 'admin.html',
       template: path.resolve(import.meta.dirname, 'templates/admin.html'),
     }),
+    new Webpack.EnvironmentPlugin({
+      API_BASE: '{{env "API_BASE"}}',
+      KEYCLOAK_CLIENT_ID: '{{env "KEYCLOAK_CLIENT_ID"}}',
+      KEYCLOAK_REALM: '{{env "KEYCLOAK_REALM"}}',
+      KEYCLOAK_URL: '{{env "KEYCLOAK_URL"}}',
+    }),
   ],
 };
 

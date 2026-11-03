@@ -42,9 +42,6 @@ const webpackConfig = {
   },
   resolve: {
     extensions: ['.js', '.jsx', '.mjs', '.gql', '.graphql'],
-    alias: {
-      'node:process': 'process/browser',
-    },
   },
   module: {
     rules: [{

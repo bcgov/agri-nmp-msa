@@ -4,5 +4,5 @@ const CONFIG = {
   KEYCLOAK_REALM: process.env.KEYCLOAK_REALM,
   KEYCLOAK_URL: process.env.KEYCLOAK_URL,
 };
-debugger;
+
 export default CONFIG;

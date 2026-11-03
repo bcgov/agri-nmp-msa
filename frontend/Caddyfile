@@ -22,7 +22,7 @@ handle {
 
 
 templates /app_config* {
-	mime application/javascript
+	mime text/javascript application/javascript
 }
 
 templates {
