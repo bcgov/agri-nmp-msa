@@ -8,7 +8,6 @@ const nodeModulesPath = path.resolve(import.meta.dirname, 'node_modules');
 const buildPath = path.resolve(import.meta.dirname, 'public', 'build');
 const mainPath = path.resolve(import.meta.dirname, 'src', 'main/index.js');
 const adminPath = path.resolve(import.meta.dirname, 'src', 'admin/index.js');
-const configPath = path.resolve(import.meta.dirname, 'src', 'shared/config.js');
 
 const webpackConfig = {
   entry: {
@@ -20,7 +19,6 @@ const webpackConfig = {
       '@babel/polyfill',
       adminPath,
     ],
-    config: configPath,
   },
   optimization: {
     splitChunks: {
@@ -34,6 +32,12 @@ const webpackConfig = {
             const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
             return `npm.${packageName.replace('@', '')}`;
           },
+        },
+        config: {
+          test: /src[\\/]shared[\\/]config\.js$/,
+          name: 'config',
+          chunks: 'all',
+          enforce: true,
         },
       },
     },
