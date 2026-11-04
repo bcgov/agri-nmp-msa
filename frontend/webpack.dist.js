@@ -36,8 +36,6 @@ const webpackConfig = {
         config: {
           test: /src[\\/]shared[\\/]config\.js$/,
           name: 'config',
-          chunks: 'all',
-          enforce: true,
         },
       },
     },
