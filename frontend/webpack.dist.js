@@ -8,6 +8,7 @@ const nodeModulesPath = path.resolve(import.meta.dirname, 'node_modules');
 const buildPath = path.resolve(import.meta.dirname, 'public', 'build');
 const mainPath = path.resolve(import.meta.dirname, 'src', 'main/index.js');
 const adminPath = path.resolve(import.meta.dirname, 'src', 'admin/index.js');
+const configPath = path.resolve(import.meta.dirname, 'src', 'shared/config.js');
 
 const webpackConfig = {
   entry: {
@@ -19,6 +20,7 @@ const webpackConfig = {
       '@babel/polyfill',
       adminPath,
     ],
+    config: configPath,
   },
   optimization: {
     splitChunks: {
